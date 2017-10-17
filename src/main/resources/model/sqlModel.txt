@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="#alias#">
+    <sql id="queryCondition">
+    </sql>
+    <select id="get#className#ListForPage" parameterClass="" resultClass="">
+        #selectSQL#
+        WHERE 1=1
+        <include refid="queryCondition"/>
+    </select>
+    <select id="get#className#ById" parameterClass="Long" resultClass="">
+        #selectSQL#
+        WHERE id=#id#
+    </select>
+    <insert id="insert#className#" parameterClass="">
+        #insertSQL#
+    </insert>
+    <update id="update#className#" parameterClass="">
+        #updateSQL#
+    </update>
+</sqlMap>

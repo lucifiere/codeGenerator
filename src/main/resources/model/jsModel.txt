@@ -1,0 +1,18 @@
+//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
+//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
+//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
+function save(){
+    if(checkFormData)
+#save#
+}
+function checkFormData(){
+    var formData = getFormData();
+#checkFormData#
+}
+function getFormData(){
+ var #alias# = new Object();
+#getFormData#
+}
+function ifBlankReturnNull(str) {
+    return str == null || str.trim().length == 0 ? null : str.trim();
+}
