@@ -1,4 +1,4 @@
-package liao.code.generator;
+package liao.code.back.generator;
 
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;

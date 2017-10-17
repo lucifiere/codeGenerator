@@ -1,7 +1,7 @@
 package liao;
 
-import liao.code.generator.BeanClassGenerator;
-import liao.code.generator.SqlGenerator;
+import liao.code.back.generator.BeanClassGenerator;
+import liao.code.back.generator.SqlGenerator;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
 import liao.utils.ReaderModelUtils;

@@ -1,4 +1,4 @@
-package liao.code.util;
+package liao.parse.table.mysql;
 
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
