@@ -1,11 +1,13 @@
 package liao.utils;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
  * Created by ao on 2017/10/12.
  */
 public class NameUtils {
+    private static final Properties conf = PropertyUtils.getConfig("config");
     /**
      * 下划线转驼峰法
      * @param line 源字符串
@@ -40,16 +42,16 @@ public class NameUtils {
         return pre+methodName;
     }
     public static String getClassName(String tableName){
-        String className = underline2Camel(tableName.replace("t_",""));
+        String className = underline2Camel(tableName.replace(conf.getProperty("tablePre"),""));
         return firstCharUpper(className);
     }
 
     public static String getAliasName(String tableName){
-        String className = underline2Camel(tableName.replace("t_",""));
+        String className = underline2Camel(tableName.replace(conf.getProperty("tablePre"),""));
         return underline2Camel(className);
     }
     public static String getSqlFileName(String tableName){
-        return "sql"+ File.separator+underline2Camel(tableName.replace("t_",""))+"_sql.xml";
+        return "sql"+ File.separator+underline2Camel(tableName.replace(conf.getProperty("tablePre"),""))+"_sql.xml";
     }
     public static String getPOFileName(String tableName){
         return  "model"+File.separator+getClassName(tableName)+".java";

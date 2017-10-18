@@ -1,5 +1,7 @@
 package liao.parse.table.mysql;
 
+import liao.code.back.generator.BeanClassGenerator;
+import liao.code.back.generator.SqlGenerator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
@@ -25,6 +27,9 @@ public class ParseMySQLDDL {
                 break;
             }
         }
+        Table table = parseDDLSQL(ddlSql);
+        BeanClassGenerator.generatorBean(table);
+        SqlGenerator.generatorSQL(table);
     }
     public static Table parseDDLSQL(List<String> sqlList){
         String tableName = getTableName(sqlList.get(0));
