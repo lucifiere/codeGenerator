@@ -3,7 +3,7 @@ package liao.code.back.generator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
-import liao.utils.ReaderModelUtils;
+import liao.utils.ReaderUtils;
 import liao.utils.WriterCodeUtils;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class BeanClassGenerator {
     public static void generatorBean(Table table){
         StringBuilder content = getColDefine(table.getColumnList());
         content.append(getMethodDefine(table.getColumnList()));
-        String model = ReaderModelUtils.getModel("PoModel");
+        String model = ReaderUtils.getModel("PoModel");
         String className = NameUtils.getClassName(table.getTableName());
         model = model.replace("#className#",className);
         model = model.replace("#content#",content);

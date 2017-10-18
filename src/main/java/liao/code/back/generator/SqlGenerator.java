@@ -3,7 +3,7 @@ package liao.code.back.generator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
-import liao.utils.ReaderModelUtils;
+import liao.utils.ReaderUtils;
 import liao.utils.WriterCodeUtils;
 
 /**
@@ -17,7 +17,7 @@ public class SqlGenerator {
         String alias = NameUtils.getAliasName(table.getTableName());
         String className = NameUtils.getClassName(table.getTableName());
         String fileName = NameUtils.getSqlFileName(table.getTableName());
-        String model = ReaderModelUtils.getModel("sqlModel");
+        String model = ReaderUtils.getModel("sqlModel");
         model = model.replace("#className#",className);
         model = model.replace("#alias#",alias);
         model = model.replace("#selectSQL#",selectSql);
