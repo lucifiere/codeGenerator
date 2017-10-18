@@ -22,7 +22,7 @@ public class ParseHtml {
     private static final String HTML_TAIL ="<\\s*/\\s*body\\s*>.*";
     private static final String IGNORE_TYPE = "(<\\s*option.+>)|(<\\s*input.+>)";
     private static final String SELECT_TYPE = "("+HANZI+"+)";
-    private static final String SPECIAL_CHAR = "只|个|元|分|角|查看";
+    private static final String SPECIAL_CHAR = "只|个|元|分|角|查看|清空";
     private static final Pattern GET_HANZI_PATTERN = Pattern.compile(GET_TEXT);
     private static final Pattern HANZI_PATTERN = Pattern.compile(HANZI);
     private static final Pattern HTML_HEAD_PATTERN = Pattern.compile(HTML_HEAD);
@@ -82,7 +82,7 @@ public class ParseHtml {
 
     }
     public static void main(String[] args){
-        System.out.println(getAllElement("C:\\Users\\ao\\Desktop\\财务-渤海银行扣款查询原型\\渤海扣款详情.html"));
+        System.out.println(getAllElement("C:\\Users\\ao\\Desktop\\汽车金融后台_还款（渤海银行）\\待还款账单.html"));
     }
 
 }
