@@ -82,7 +82,7 @@ public class ParseHtml {
 
     }
     public static void main(String[] args){
-        System.out.println(getAllElement("C:\\Users\\ao\\Desktop\\财务-渤海银行扣款查询原型\\放款单详情.html"));
+        System.out.println(getAllElement("C:\\Users\\ao\\Desktop\\财务-渤海银行扣款查询原型\\渤海扣款详情.html"));
     }
 
 }
