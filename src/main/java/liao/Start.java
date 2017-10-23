@@ -5,6 +5,8 @@ import liao.code.back.generator.SqlGenerator;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -15,7 +17,6 @@ public class Start {
         System.out.println("输入DDL");
         Scanner sc = new Scanner(System.in);
         String tableName = sc.nextLine().trim();
-        sc.close();
         Table table = new ParseTableForMySQL(tableName).getTable();
         BeanClassGenerator.generatorBean(table);
         SqlGenerator.generatorSQL(table);

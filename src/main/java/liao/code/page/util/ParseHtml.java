@@ -1,5 +1,8 @@
 package liao.code.page.util;
 
+import liao.code.page.model.Element;
+import liao.code.page.model.PageTable;
+import liao.utils.PropertyUtils;
 import liao.utils.ReaderUtils;
 
 import java.io.IOException;
@@ -22,6 +25,9 @@ public class ParseHtml {
     private static final String HTML_TAIL ="<\\s*/\\s*body\\s*>.*";
     private static final String IGNORE_TYPE = "(<\\s*option.+>)|(<\\s*input.+>)";
     private static final String SELECT_TYPE = "("+HANZI+"+)";
+    private static final String HAS_TAG = "<|[</][^>]+>";
+    private static final String HIDE = PropertyUtils.getConfig("config").getProperty("hide");
+    private static final Pattern HIDE_PATTERN = Pattern.compile("(.*)(<[^<]*"+HIDE+".+)");
     private static final String SPECIAL_CHAR = "只|个|元|分|角|查看|清空";
     private static final Pattern GET_HANZI_PATTERN = Pattern.compile(GET_TEXT);
     private static final Pattern HANZI_PATTERN = Pattern.compile(HANZI);
@@ -29,38 +35,112 @@ public class ParseHtml {
     private static final Pattern HTML_TAIL_PATTERN = Pattern.compile(HTML_TAIL);
     private static final Pattern HANZI_BEFORE_PATTERN = Pattern.compile(HANZI_BEFORE);
     private static final Pattern HANZI_AFTER_PATTERN = Pattern.compile(HANZI_AFTER);
+    private static final Pattern HAS_TAG_PATTERN = Pattern.compile(HAS_TAG);
 
 
-    public static List<String> getAllElement(String path){
+    public static PageTable getAllElement(String path){
         try {
             List<String> htmlLines = ReaderUtils.readAllLines(path);
-            List<String> eleList = new ArrayList<>();
-            for(String line : htmlLines){
-                eleList.addAll(getElementNameList(line));
+            PageTable pageTable = new PageTable();
+            List<Element> elementList = new ArrayList<>();
+            pageTable.setElementList(elementList);
+            for(int i = 0;i < htmlLines.size();){
+                String line = htmlLines.get(i);
+                Matcher matcher = HIDE_PATTERN.matcher(line);
+                if(matcher.find()){
+                    String needParseHtml = matcher.group(2);
+                    htmlLines.set(i,needParseHtml);
+                    i = getMatchEndTagIndex(i,htmlLines);
+                    line = matcher.group(1);//防止代码开头有匹配的元素
+                }else{
+                    i++;
+                }
+                elementList.addAll(getElementNameList(line));
+
             }
-            return eleList;
+            return pageTable;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    private static List<String> getElementNameList(String line){
-        List<String> eleList = new ArrayList<>();
-        line = line.replaceAll(NOT_PLAIN_TEXT,""); //去掉非纯文本的汉字
-        line = line.replaceAll(COMMENT,""); //去掉注释
-        HANZI_PATTERN.matcher(line);
-        Matcher matcher =GET_HANZI_PATTERN.matcher(line);
-        while (matcher.find()){
-            System.out.println(line);
-            String type = matcher.group(1);
-            String ele = matcher.group(2);
-            ele = ele.replaceAll(HANZI_BEFORE,"");
-            ele = ele.replaceAll(HANZI_AFTER,"");
-            ele = ele.trim();
-            if(!type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(ele)) {
-                eleList.add(ele);
+
+    private static int getMatchEndTagIndex(int nowIndex,List<String> htmlLines){
+        String startLine = htmlLines.get(nowIndex);
+        String tagName = getTagName(startLine);
+        startLine = startLine.substring(startLine.indexOf("<" + tagName)+("<" + tagName).length());
+        htmlLines.set(nowIndex,startLine);
+        int startTagCount = 1;
+        for(int i = nowIndex;i < htmlLines.size();i++){
+            String html = htmlLines.get(i);
+            Result parseResult = noMatchTagCount(startTagCount,tagName,html);
+            startTagCount = parseResult.noMatchCount;
+            if(startTagCount == 0){
+                htmlLines.set(i,parseResult.noParseHtml);
+                return i;
             }
         }
-        return eleList;
+        return htmlLines.size()-1;
+    }
+    private static Result noMatchTagCount(int startTagCount,String tagName,String html){
+        for(;;) {
+            int startTagIndex = html.indexOf("<" + tagName);
+            int endTagIndex = html.indexOf("</" + tagName);
+            if((startTagIndex < 0 && endTagIndex < 0) || startTagCount==0){
+                return new Result(startTagCount,html);
+            }
+            else if (endTagIndex < 0 || (startTagIndex > 0 && endTagIndex > startTagIndex)) {
+                startTagCount++;
+                html = html.substring(html.indexOf("<" + tagName)+("<" + tagName).length());
+            }
+            else if (startTagIndex < 0 ||(endTagIndex > 0 && endTagIndex < startTagIndex)  ) {
+                startTagCount--;
+                html = html.substring(html.indexOf("</" + tagName)+("</" + tagName).length());
+            }
+        }
+    }
+    private static String getTagName(String html){
+        if(!hasTag(html)){
+            return null;
+        }
+        html = html.trim();
+        String[] attr =  html.split(" ");
+        attr[0] = attr[0].substring(1);
+        return attr[0];
+    }
+    private static String getEndTag(String html){
+        if( html.contains("</")){
+            html= html.replace(".*</","");
+            html = html.trim();
+            String[] attr =  html.split(" ");
+            return attr[0];
+        }
+        return null;
+    }
+    private static boolean isEndTag(String html){
+        return html.contains("</");
+    }
+    private static boolean hasTag(String html){
+        Matcher matcher = HAS_TAG_PATTERN.matcher(html);
+        return matcher.find();
+    }
+    private static List<Element> getElementNameList(String line){
+        List<Element> elementList = new ArrayList<>();
+        line = line.replaceAll(NOT_PLAIN_TEXT,""); //去掉非纯文本的汉字
+        line = line.replaceAll(COMMENT,""); //去掉注释
+        Matcher matcher =GET_HANZI_PATTERN.matcher(line);
+        while (matcher.find()){
+            String type = matcher.group(1);
+            String name = matcher.group(2);
+            name = name.replaceAll(HANZI_BEFORE,"");
+            name = name.replaceAll(HANZI_AFTER,"");
+            name = name.trim();
+            if(!type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(name)) {
+                Element ele = new Element();
+                ele.setEleName(name);
+                elementList.add(ele);
+            }
+        }
+        return elementList;
     }
     private static List<String> formatHtml(List<String> htmlLines){
         return htmlLines;
@@ -81,8 +161,18 @@ public class ParseHtml {
     private static void getTableTag(List<String> htmlLines){
 
     }
+
+    static class Result{
+        int noMatchCount;
+        String noParseHtml;
+        Result( int noMatchCount,
+                String noParseHtml){
+            this.noMatchCount = noMatchCount;
+            this.noParseHtml = noParseHtml;
+        }
+    }
     public static void main(String[] args){
-        System.out.println(getAllElement("C:\\Users\\ao\\Desktop\\汽车金融后台_还款（渤海银行）\\待还款账单.html"));
+        System.out.println(getAllElement("C:/Users/ao/Desktop/html.html").getElementList());
     }
 
 }

@@ -1,5 +1,6 @@
 package liao.code.page.util;
 
+import liao.code.page.model.Element;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 

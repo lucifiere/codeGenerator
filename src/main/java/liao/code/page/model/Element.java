@@ -15,6 +15,7 @@ public class Element {
     private Integer lengthLimit; //长度限制
     private String typeLimit; //输入值限制
     private List<String> valueList;  //可选值
+    private int isTableHead; //是不是表头
 
     public String getEleName() {
         return eleName;
@@ -86,5 +87,16 @@ public class Element {
 
     public void setValueList(List<String> valueList) {
         this.valueList = valueList;
+    }
+
+    public int getIsTableHead() {
+        return isTableHead;
+    }
+
+    public void setIsTableHead(int isTableHead) {
+        this.isTableHead = isTableHead;
+    }
+    public String toString(){
+        return eleName +"="+beanName+"."+colName;
     }
 }
