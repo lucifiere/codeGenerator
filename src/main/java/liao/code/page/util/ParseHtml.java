@@ -47,11 +47,11 @@ public class ParseHtml {
             for(int i = 0;i < htmlLines.size();){
                 String line = htmlLines.get(i);
                 Matcher matcher = HIDE_PATTERN.matcher(line);
-                if(matcher.find()){
+                if(matcher.find()){//如果是影藏的部分，不解析直接跳过
                     String needParseHtml = matcher.group(2);
-                    htmlLines.set(i,needParseHtml);
-                    i = getMatchEndTagIndex(i,htmlLines);
                     line = matcher.group(1);//防止代码开头有匹配的元素
+                    htmlLines.set(i,needParseHtml);//直解析需要忽略的部分
+                    i = getMatchEndTagIndex(i,htmlLines);//找到下一个需要开始解析的位置
                 }else{
                     i++;
                 }
@@ -64,6 +64,12 @@ public class ParseHtml {
         }
     }
 
+    /**
+     * 找到影藏部分起始标签来确定下一个解析的部分
+     * @param nowIndex
+     * @param htmlLines
+     * @return
+     */
     private static int getMatchEndTagIndex(int nowIndex,List<String> htmlLines){
         String startLine = htmlLines.get(nowIndex);
         String tagName = getTagName(startLine);

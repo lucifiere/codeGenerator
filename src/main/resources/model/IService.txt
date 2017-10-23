@@ -1,0 +1,19 @@
+
+import java.util.List;
+
+import com.zuche.framework.vo.User;
+
+
+public interface #className#Service{
+    List<#className#Vo> get#className#ListForPage(#className# #alias#);
+
+    Integer get#className#ListCount(#className#Vo #alias#);
+
+    #className#Vo get#className#ById(Long id);
+
+    void insert#className#(#className# #alias#,User user);
+
+    void update#className#(#className# #alias#,User user);
+}
+
+

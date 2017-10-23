@@ -1,0 +1,88 @@
+
+import com.uc.ucBase.util.waterfallpage.PageItemsUtil;
+import com.uc.ucBase.util.waterfallpage.jmesa.PageQueryProxy;
+
+import com.zuche.framework.utils.AuthorizationMessageUtil;
+import com.zuche.framework.vo.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+@Controller
+@RequestMapping(value = "/#alias#")
+public class #className#Controller{
+
+     private static final String LIST_PAGE = "";
+     private static final String EDIT_PAGE = "";
+     @Autowired
+     private #className#Service #alias#Service;
+
+     @RequestMapping("getList")
+     public ModelAndView getList(#className#Vo #alias#Vo, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mv = new ModelAndView(LIST_PAGE);
+        Collection<#className#Vo> items = PageItemsUtil.getItems
+        (#alias#Vo, new PageQueryProxy<#className#Vo, #className#Vo>() {
+            @Override
+            public Collection<#className#Vo> queryList(#className#Vo #alias#Vo) throws Exception {
+                return #alias#Service.get#className#ListForPage(#alias#Vo);
+            }
+
+            @Override
+            public int queryCount(#className#Vo #alias#Vo) throws Exception {
+                return #alias#Service.get#className#Count(#alias#Vo);
+            }
+            }, request, listName);
+            mv.addObject("items", items);
+            mv.addObject("#alias#Vo", #alias#Vo);
+            this.setEnumInfo(mv, true);
+            return mv;
+     }
+     private void setEnumInfo(ModelAndView mv){
+
+     }
+
+     @RequestMapping("toEdit")
+     public ModelAndView toEdit(Long id) {
+        ModelAndView mv = new ModelAndView(EDIT_PAGE);
+        mv.addObject("#alias#Vo", get#className#ForPage(id));
+        setEnumInfo(mv, false);
+        mv.addObject("optType","edit");
+        return mv;
+     }
+     
+     @RequestMapping("toAdd")
+     public ModelAndView toAdd() {
+        ModelAndView mv = new ModelAndView(EDIT_PAGE);
+        mv.addObject("#alias#Vo", #alias#Vo);
+        setEnumInfo(mv, false);
+        mv.addObject("optType","add");
+        return mv;
+     }
+
+     @RequestMapping("toBrowser")
+     public ModelAndView toBrowser(long id) {
+        ModelAndView mv = new ModelAndView(EDIT_PAGE);
+        mv.addObject("#alias#Vo", #alias#Vo);
+        setEnumInfo(mv, false);
+        mv.addObject("optType","browser");
+        return mv;
+     }
+     private #className#Vo get#className#ByIdForPage(Long id){
+        return #alias#Service.get#className#ById(id);
+     }
+
+}

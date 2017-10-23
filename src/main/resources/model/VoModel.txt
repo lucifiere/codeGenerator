@@ -1,0 +1,9 @@
+
+
+
+import com.zuche.framework.annotation.IbatisAliasConfig;
+
+@IbatisAliasConfig(alias="#alias#Vo")
+public class #className#Vo extends #className# {
+#content#
+}

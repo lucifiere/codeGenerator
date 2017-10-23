@@ -8,6 +8,11 @@
         WHERE 1=1
         <include refid="queryCondition"/>
     </select>
+    <select id="get#className#ListCount" parameterClass="" resultClass="java.lang.Integer">
+         select count(1)
+            WHERE 1=1
+         <include refid="queryCondition"/>
+    </select>
     <select id="get#className#ById" parameterClass="Long" resultClass="">
         #selectSQL#
         WHERE id=#id#

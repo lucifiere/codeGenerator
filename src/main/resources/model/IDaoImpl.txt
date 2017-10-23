@@ -1,0 +1,29 @@
+
+import com.uc.ucmams.common.dao.UCIbatisDaoImpl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class#className#DaoImpl extends UCIbatisDaoImpl implements #className#Dao{
+    public List<#className#Vo> get#className#ListForPage(#className# #alias#){
+        return this.executeQueryForMultiLimit("#alias#.get#className#ListForPage", #alias#, #className#Vo.class);
+    }
+
+    public Integer get#className#ListCount(#className#Vo #alias#){
+        return (Integer) this.queryForObject("#alias#.get#className#ListCount", #alias#);
+    }
+
+    public #className#Vo get#className#ById(Long id){
+        return (#className#Vo) this.queryForObject("#alias#.get#className#ById",id);
+    }
+
+    public void insert#className#(#className# #alias#){
+        this.insert("#alias#.insert#className#", #alias#);
+    }
+
+    public void update#className#(#className# #alias#){
+        this.update("#alias#.update#className#", #alias#);
+    }
+}

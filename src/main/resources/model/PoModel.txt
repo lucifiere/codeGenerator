@@ -3,6 +3,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class #className#{
+import com.zuche.framework.annotation.IbatisAliasConfig;
+import com.zuche.framework.dao.util.QueryCond;
+
+@IbatisAliasConfig(alias="#alias#")
+public class #className# extends QueryCond implements Serializable {
 #content#
 }

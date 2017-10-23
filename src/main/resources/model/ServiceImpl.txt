@@ -1,0 +1,44 @@
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zuche.framework.vo.User;
+
+
+@Service
+public class #className#ServiceImpl implements #className#Service{
+
+	private static final Logger logger = LoggerFactory.getLogger(#className#ServiceImpl.class);
+
+    @Autowired
+    private #className#Dao #alias#Dao;
+
+    public List<#className#Vo> get#className#ListForPage(#className# #alias#){
+        List<#className#Vo> resultList = #alias#Dao.get#className#ListForPage(#alias#);
+        setPageInfo(resultList);
+        return resultList;
+    }
+
+    private void setPageInfo(List<#className#Vo> resultList){
+
+    }
+
+    public Integer get#className#ListCount(#className#Vo #alias#){
+        return #alias#Dao.get#className#ListCount(#alias#);
+    }
+
+    public #className#Vo get#className#ById(Long id){
+        #className#Vo result = #alias#Dao.get#className#ById(#alias#);
+        return result;
+    }
+
+    public void insert#className#(#className# #alias#,User user){
+        #alias#Dao.insert#className#(#alias#);
+    }
+
+    public void update#className#(#className# #alias#,User user){
+        #alias#Dao.update#className#(#alias#);
+    }
+}

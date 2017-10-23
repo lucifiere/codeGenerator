@@ -1,3 +1,20 @@
 
+import com.uc.ucmams.common.dao.UCIbatisDaoImpl;
+
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+public interface #className#Dao{
+    List<#className#> get#className#ListForPage(#className# #alias#);
+
+    Integer get#className#ListCount(#className# #alias#);
+
+    #className# get#className#ById(Long id);
+
+    void insert#className#(#className# #alias#);
+
+    void update#className#(#className# #alias#);
+}
+
 
