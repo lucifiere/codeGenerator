@@ -25,6 +25,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/#alias#")
 public class #className#Controller{
+	private static final Logger logger = LoggerFactory.getLogger(#className#Controller.class);
 
      private static final String LIST_PAGE = "";
      private static final String EDIT_PAGE = "";

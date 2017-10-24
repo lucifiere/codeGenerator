@@ -3,8 +3,12 @@ package liao.code.back.generator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
+import liao.utils.PropertyUtils;
 import liao.utils.ReaderUtils;
 import liao.utils.WriterCodeUtils;
+
+import java.io.File;
+import java.util.Properties;
 
 /**
  * Created by ao on 2017/10/13.
@@ -16,7 +20,7 @@ public class SqlGenerator {
         String updateSql = createUpdateSql(table);
         String alias = NameUtils.getAliasName(table.getTableName());
         String className = NameUtils.getClassName(table.getTableName());
-        String fileName = NameUtils.getSqlFileName(table.getTableName());
+        String fileName = getSqlFileName(table.getTableName());
         String model = ReaderUtils.getModel("sqlModel");
         model = model.replace("#className#",className);
         model = model.replace("#alias#",alias);
@@ -64,6 +68,10 @@ public class SqlGenerator {
 
     public static StringBuilder removeLastChar(StringBuilder str,String code){
         return new StringBuilder(str.substring(0,str.lastIndexOf(code)));
+    }
+
+    public static String getSqlFileName(String tableName){
+        return "sql"+ File.separator+NameUtils.underline2Camel(tableName.replace(PropertyUtils.getConfig("config").getProperty("tablePre"),""))+"_sql.xml";
     }
 
 }

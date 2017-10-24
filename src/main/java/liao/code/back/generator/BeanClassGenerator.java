@@ -5,31 +5,30 @@ import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
 import liao.utils.ReaderUtils;
 import liao.utils.WriterCodeUtils;
+import org.springframework.beans.factory.BeanFactory;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * Created by ao on 2017/10/12.
  */
-public class BeanClassGenerator {
-    public static void generatorBean(Table table){
-        StringBuilder content = getColDefine(table.getColumnList());
+public class BeanClassGenerator extends AbstractClassGenerator {
+    private static final String CONFIG_FILE = "PoModel";
+    protected String createCode(Table table){
+        StringBuilder content = createAttr(table);
         content.append(getMethodDefine(table.getColumnList()));
-        String model = ReaderUtils.getModel("PoModel");
-        String className = NameUtils.getClassName(table.getTableName());
-        model = model.replace("#className#",className);
-        model = model.replace("#content#",content);
-        String fileName = NameUtils.getPOFileName(table.getTableName());
-        WriterCodeUtils.writeCode(fileName,model);
+        return content.toString();
     }
-    private static StringBuilder getColDefine(List<Column> colList){
+    private StringBuilder createAttr(Table table){
+        List<Column> colList = table.getColumnList();
         StringBuilder content = new StringBuilder();
         for(Column col : colList){
             content.append("    private "+ col.getColJavaType() + " " + col.getCamelColName() + ";//"+col.getComment()+System.lineSeparator());
         }
         return content;
     }
-    private static StringBuilder getMethodDefine(List<Column> colList){
+    private StringBuilder getMethodDefine(List<Column> colList){
         StringBuilder content = new StringBuilder();
         for(Column col : colList){
             String getMethod = NameUtils.getGetterMethodName(col.getCamelColName(),col.getColJavaType());
@@ -44,4 +43,19 @@ public class BeanClassGenerator {
         return content;
     }
 
+    public String getFileName(Table table){
+        return  "model"+ File.separator+NameUtils.getClassName(table.getTableName())+".java";
+    }
+
+    @Override
+    protected String getConfFile() {
+        return CONFIG_FILE;
+    }
+
+    static class BeanFactory implements Factory<BeanClassGenerator> {
+        @Override
+        public BeanClassGenerator create() {
+            return new BeanClassGenerator();
+        }
+    }
 }

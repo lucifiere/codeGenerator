@@ -50,12 +50,7 @@ public class NameUtils {
         String className = underline2Camel(tableName.replace(conf.getProperty("tablePre"),""));
         return underline2Camel(className);
     }
-    public static String getSqlFileName(String tableName){
-        return "sql"+ File.separator+underline2Camel(tableName.replace(conf.getProperty("tablePre"),""))+"_sql.xml";
-    }
-    public static String getPOFileName(String tableName){
-        return  "model"+File.separator+getClassName(tableName)+".java";
-    }
+
     private static String firstCharUpper(String name){
         return name.substring(0,1).toUpperCase()+name.substring(1);
     }
