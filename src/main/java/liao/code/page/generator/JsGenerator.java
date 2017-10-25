@@ -31,6 +31,7 @@ public class JsGenerator extends AbstractCodeGenerator{
                 formData.append(System.lineSeparator());
             }
         }
+        formData.append("return #alias#;");
         return formData;
     }
     private String checkFormData(List<PageTable> page){
