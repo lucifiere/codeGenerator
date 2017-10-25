@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class#className#DaoImpl extends UCIbatisDaoImpl implements #className#Dao{
-    public List<#className#Vo> get#className#ListForPage(#className# #alias#){
+    public List<#className#Vo> get#className#ListForPage(#className#Vo #alias#){
         return this.executeQueryForMultiLimit("#alias#.get#className#ListForPage", #alias#, #className#Vo.class);
     }
 
@@ -19,11 +19,11 @@ public class#className#DaoImpl extends UCIbatisDaoImpl implements #className#Dao
         return (#className#Vo) this.queryForObject("#alias#.get#className#ById",id);
     }
 
-    public void insert#className#(#className# #alias#){
+    public void insert#className#(#className#Vo #alias#){
         this.insert("#alias#.insert#className#", #alias#);
     }
 
-    public void update#className#(#className# #alias#){
+    public void update#className#(#className#Vo #alias#){
         this.update("#alias#.update#className#", #alias#);
     }
 }

@@ -3,24 +3,24 @@
 <sqlMap namespace="#alias#">
     <sql id="queryCondition">
     </sql>
-    <select id="get#className#ListForPage" parameterClass="" resultClass="">
+    <select id="get#className#ListForPage" parameterClass="#alias#Vo" resultClass="#alias#Vo">
         #selectSQL#
         WHERE 1=1
         <include refid="queryCondition"/>
     </select>
-    <select id="get#className#ListCount" parameterClass="" resultClass="java.lang.Integer">
+    <select id="get#className#ListCount" parameterClass="#alias#Vo" resultClass="java.lang.Integer">
          select count(1)
             WHERE 1=1
          <include refid="queryCondition"/>
     </select>
-    <select id="get#className#ById" parameterClass="Long" resultClass="">
+    <select id="get#className#ById" parameterClass="Long" resultClass="#alias#Vo">
         #selectSQL#
         WHERE id=#id#
     </select>
-    <insert id="insert#className#" parameterClass="">
+    <insert id="insert#className#" parameterClass="#alias#Vo">
         #insertSQL#
     </insert>
-    <update id="update#className#" parameterClass="">
+    <update id="update#className#" parameterClass="#alias#Vo">
         #updateSQL#
     </update>
 </sqlMap>

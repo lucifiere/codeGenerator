@@ -1,13 +1,12 @@
 package liao;
 
-import liao.code.back.generator.AbstractClassGenerator;
-import liao.code.back.generator.BeanClassGenerator;
-import liao.code.back.generator.RegistrationFactory;
-import liao.code.back.generator.SqlGenerator;
+import liao.code.generator.AbstractCodeGenerator;
+import liao.code.generator.back.javacode.AbstractClassGenerator;
+import liao.code.generator.back.factory.RegistrationFactory;
+import liao.code.generator.back.sql.SqlGenerator;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,10 +19,9 @@ public class Start {
         Scanner sc = new Scanner(System.in);
         String tableName = sc.nextLine().trim();
         Table table = new ParseTableForMySQL(tableName).getTable();
-        List<AbstractClassGenerator> generatorList = RegistrationFactory.getGeneratorList();
-        for(AbstractClassGenerator classGenerator : generatorList){
+        List<AbstractCodeGenerator> generatorList = RegistrationFactory.getGeneratorList();
+        for(AbstractCodeGenerator classGenerator : generatorList){
             classGenerator.generatorCode(table);
         }
-        SqlGenerator.generatorSQL(table);
     }
 }

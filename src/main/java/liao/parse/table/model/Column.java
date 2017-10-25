@@ -9,7 +9,7 @@ public class Column {
     private String colDBType;
     private String colJavaType;
     private String comment;
-    private boolean isNullable;
+    private int isNullable;
 
     public String getColName() {
         return colName;
@@ -51,11 +51,11 @@ public class Column {
         this.comment = comment;
     }
 
-    public boolean isNullable() {
+    public int isNullable() {
         return isNullable;
     }
 
-    public void setNullable(boolean nullable) {
+    public void setNullable(int nullable) {
         isNullable = nullable;
     }
 }

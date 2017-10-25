@@ -15,7 +15,7 @@ public class #className#ServiceImpl implements #className#Service{
     @Autowired
     private #className#Dao #alias#Dao;
 
-    public List<#className#Vo> get#className#ListForPage(#className# #alias#){
+    public List<#className#Vo> get#className#ListForPage(#className#Vo #alias#){
         List<#className#Vo> resultList = #alias#Dao.get#className#ListForPage(#alias#);
         setPageInfo(resultList);
         return resultList;
@@ -34,11 +34,11 @@ public class #className#ServiceImpl implements #className#Service{
         return result;
     }
 
-    public void insert#className#(#className# #alias#,User user){
+    public void insert#className#(#className#Vo #alias#,User user){
         #alias#Dao.insert#className#(#alias#);
     }
 
-    public void update#className#(#className# #alias#,User user){
+    public void update#className#(#className#Vo #alias#,User user){
         #alias#Dao.update#className#(#alias#);
     }
 }

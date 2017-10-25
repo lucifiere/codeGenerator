@@ -46,7 +46,7 @@ public class #className#Controller{
             public int queryCount(#className#Vo #alias#Vo) throws Exception {
                 return #alias#Service.get#className#Count(#alias#Vo);
             }
-            }, request, listName);
+            }, request, "#alias#List");
             mv.addObject("items", items);
             mv.addObject("#alias#Vo", #alias#Vo);
             this.setEnumInfo(mv, true);

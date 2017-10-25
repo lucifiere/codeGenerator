@@ -1,9 +1,9 @@
 package liao.parse.table.mysql;
 
-import liao.code.back.generator.AbstractClassGenerator;
-import liao.code.back.generator.BeanClassGenerator;
-import liao.code.back.generator.RegistrationFactory;
-import liao.code.back.generator.SqlGenerator;
+import liao.code.generator.AbstractCodeGenerator;
+import liao.code.generator.back.javacode.AbstractClassGenerator;
+import liao.code.generator.back.factory.RegistrationFactory;
+import liao.code.generator.back.sql.SqlGenerator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
@@ -30,11 +30,10 @@ public class ParseMySQLDDL {
             }
         }
         Table table = parseDDLSQL(ddlSql);
-        List<AbstractClassGenerator> generatorList = RegistrationFactory.getGeneratorList();
-        for(AbstractClassGenerator classGenerator : generatorList){
+        List<AbstractCodeGenerator> generatorList = RegistrationFactory.getGeneratorList();
+        for(AbstractCodeGenerator classGenerator : generatorList){
             classGenerator.generatorCode(table);
         }
-        SqlGenerator.generatorSQL(table);
     }
     public static Table parseDDLSQL(List<String> sqlList){
         String tableName = getTableName(sqlList.get(0));

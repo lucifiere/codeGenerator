@@ -5,15 +5,15 @@ import com.zuche.framework.vo.User;
 
 
 public interface #className#Service{
-    List<#className#Vo> get#className#ListForPage(#className# #alias#);
+    List<#className#Vo> get#className#ListForPage(#className#Vo #alias#);
 
     Integer get#className#ListCount(#className#Vo #alias#);
 
     #className#Vo get#className#ById(Long id);
 
-    void insert#className#(#className# #alias#,User user);
+    void insert#className#(#className#Vo #alias#,User user);
 
-    void update#className#(#className# #alias#,User user);
+    void update#className#(#className#Vo #alias#,User user);
 }
 
 
