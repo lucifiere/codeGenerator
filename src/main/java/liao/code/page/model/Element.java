@@ -10,10 +10,10 @@ public class Element {
     private String colName; //对应的字段
     private String dbTable; //所在表
     private String beanName; //锁在bean名称
-    private String type;  //输入类型
-    private boolean isNullable; //必填
+    private Integer inputType;  //输入类型
+    private int isNullable; //必填
     private Integer lengthLimit; //长度限制
-    private String typeLimit; //输入值限制
+    private int typeLimit; //输入值限制
     private List<String> valueList;  //可选值
     private int isTableHead; //是不是表头
 
@@ -49,19 +49,11 @@ public class Element {
         this.beanName = beanName;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean getIsNullable() {
+    public int getIsNullable() {
         return isNullable;
     }
 
-    public void setIsNullable(boolean isNullable) {
+    public void setIsNullable(int isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -73,11 +65,11 @@ public class Element {
         this.lengthLimit = lengthLimit;
     }
 
-    public String getTypeLimit() {
+    public int getTypeLimit() {
         return typeLimit;
     }
 
-    public void setTypeLimit(String typeLimit) {
+    public void setTypeLimit(int typeLimit) {
         this.typeLimit = typeLimit;
     }
 
@@ -98,5 +90,13 @@ public class Element {
     }
     public String toString(){
         return eleName +"="+beanName+"."+colName;
+    }
+
+    public Integer getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(Integer inputType) {
+        this.inputType = inputType;
     }
 }

@@ -13,24 +13,17 @@ import java.util.Properties;
 /**
  * Created by ao on 2017/10/13.
  */
-public class SqlGenerator {
-    public static void generatorSQL(Table table){
+public class SqlGenerator extends AbstractCodeGenerator{
+    private static final String CONFIG_FILE = "sqlModel";
+    public String replaceModelCode(Table table,String model){
         String selectSql = createSelectSql(table);
         String insertSql = createInsertSql(table);
         String updateSql = createUpdateSql(table);
-        String alias = NameUtils.getAliasName(table.getTableName());
-        String className = NameUtils.getClassName(table.getTableName());
-        String fileName = getSqlFileName(table.getTableName());
-        String model = ReaderUtils.getModel("sqlModel");
-        model = model.replace("#className#",className);
-        model = model.replace("#alias#",alias);
         model = model.replace("#selectSQL#",selectSql);
         model = model.replace("#insertSQL#",insertSql);
-        model = model.replace("#updateSQL#",updateSql);
-        WriterCodeUtils.writeCode(fileName,model);
-
+        return model.replace("#updateSQL#",updateSql);
     }
-    public static String createSelectSql(Table table){
+    public String createSelectSql(Table table){
         StringBuilder sql = new StringBuilder("SELECT" + System.lineSeparator());
         for(Column col : table.getColumnList()){
             sql.append("            t."+col.getColName() + " AS " + col.getCamelColName() + ","+System.lineSeparator());
@@ -40,7 +33,7 @@ public class SqlGenerator {
         sql.append("        FROM " + table.getTableName()+ " t" + System.lineSeparator());
         return sql.toString();
     }
-    public static String createInsertSql(Table table){
+    public String createInsertSql(Table table){
         StringBuilder sql = new StringBuilder("INSERT INTO " +  table.getTableName() +"("+System.lineSeparator());
         for(Column col : table.getColumnList()){
             sql.append("            "+col.getColName()+ ","+System.lineSeparator());
@@ -55,7 +48,7 @@ public class SqlGenerator {
         sql.append(")");
         return sql.toString();
     }
-    public static String createUpdateSql(Table table){
+    public String createUpdateSql(Table table){
         StringBuilder sql = new StringBuilder("UPDATE " +  table.getTableName() + " SET"+System.lineSeparator());
         for(Column col : table.getColumnList()){
             sql.append("            "+col.getColName()+ "=#"+col.getCamelColName()+"#,"+System.lineSeparator());
@@ -66,12 +59,17 @@ public class SqlGenerator {
         return sql.toString();
     }
 
-    public static StringBuilder removeLastChar(StringBuilder str,String code){
+    public StringBuilder removeLastChar(StringBuilder str,String code){
         return new StringBuilder(str.substring(0,str.lastIndexOf(code)));
     }
 
-    public static String getSqlFileName(String tableName){
-        return "sql"+ File.separator+NameUtils.underline2Camel(tableName.replace(PropertyUtils.getConfig("config").getProperty("tablePre"),""))+"_sql.xml";
+    public String getFileName(Table table){
+        return "sql"+ File.separator+NameUtils.underline2Camel(table.getTableName().replace(PropertyUtils.getConfig("config").getProperty("tablePre"),""))+"_sql.xml";
     }
+    @Override
+    protected String getConfFile() {
+        return CONFIG_FILE;
+    }
+
 
 }

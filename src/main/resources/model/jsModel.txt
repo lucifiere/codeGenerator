@@ -1,6 +1,5 @@
-//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
-//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
-//#alias#.#eleName# = ifBlankReturnNull(document.getElementById("#eleName#").value);
+//
+//
 function save(){
     if(checkFormData)
 #save#
@@ -10,9 +9,81 @@ function checkFormData(){
 #checkFormData#
 }
 function getFormData(){
- var #alias# = new Object();
+    var #alias# = new Object();
+    #alias#.id = ifBlankReturnNull(document.getElementById(id).value);
 #getFormData#
 }
 function ifBlankReturnNull(str) {
     return str == null || str.trim().length == 0 ? null : str.trim();
+}
+function getElementById(id){
+    return ifBlankReturnNull(document.getElementById(id).value);
+}
+function getRadioValue(name){
+    var radio = document.getElementsByName(name);
+    for (i=0; i<radio.length; i++) {
+        if (radio[i].checked) {
+            return radio[i].value;
+        }
+    }
+}
+function getCheckBoxValues(name){
+
+}
+
+function onlyInputNumber() {
+    var keyCode = event.keyCode;
+    if ((keyCode >= 48 && keyCode <= 57))
+    {
+        event.returnValue = true;
+    } else {
+        event.returnValue = false;
+    }
+}
+
+function blurCheckIsNumber(obj){
+    if((obj.value != null && obj.value != "") && !isNumber(obj.value)){
+        alert("请输入合法的正整数！");
+        obj.focus();
+    }
+}
+function checkIsNumber(val,tip){
+   if((obj.value != null && obj.value != "") && !isNumber(obj.value)){
+        alert(tip+"必须是正整数！");
+        return false;
+   }
+   return true;
+}
+function blurCheckIsTwoScaleNumber(obj,tip){
+    if(!checkIsTwoScaleNumber(obj.value)){
+        obj.focus();
+    }
+}
+function checkIsTwoScaleNumber(val,tip){
+    if((obj.value != null && obj.value != "") && !isTowScaleNumber(obj.value)){
+        alert(tip+"必须是两位以内的小数！");
+        return false;
+    }
+    return true;
+}
+function isNumber(obj){
+    var reg = new RegExp("^[1-9][0-9]*$");
+    return reg.test(obj);
+}
+
+function isTowScaleNumber(obj) {
+    if(obj == null || obj == ""){
+        return true;
+    }
+    var reg = new RegExp("^[0-9]+(\.[0-9]{0,2})?$");
+    return reg.test(obj);
+}
+function checkLength(val,limit){
+    if(obj == null){
+        return true;
+    }
+    return obj.length <= limit;
+}
+function isEmpty(val){
+
 }
