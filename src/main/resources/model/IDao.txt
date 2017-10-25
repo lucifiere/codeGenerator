@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 public interface #className#Dao{
-    List<#className#> get#className#ListForPage(#className# #alias#);
+    List<#className#> get#className#ListForPage(#className#Vo #alias#);
 
-    Integer get#className#ListCount(#className# #alias#);
+    Integer get#className#ListCount(#className#Vo #alias#);
 
     #className# get#className#ById(Long id);
 
