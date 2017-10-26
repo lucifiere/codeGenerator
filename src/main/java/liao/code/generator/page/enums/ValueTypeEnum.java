@@ -6,9 +6,9 @@ import liao.utils.EnumCheck;
  * Created by ao on 2017/10/25.
  */
 public enum ValueTypeEnum implements EnumCheck {
-    INTEGER(1,"正整数","checkIsNumber","blurCheckIsNumber"),
-    TWO_SCALE(2,"两位小数","checkIsTowScaleNumber","blurCheckIsTwoScaleNumber"),
-    STRING(3,"字符串","checkIsTowScaleNumber","blurCheckIsTwoScaleNumber");
+    INTEGER(1,"正整数","checkIsNumber","blurCheckIsNumber(this)"),
+    TWO_SCALE(2,"两位小数","checkIsTowScaleNumber","blurCheckIsTwoScaleNumber(this)"),
+    STRING(3,"字符串","checkIsTowScaleNumber","");
     private int value;
     private String desc;
     private String checkMethod;

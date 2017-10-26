@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class PageTable {
     private String tableName;
-    private String eleExample;
+    private int isList = 0;
+    private int tdNumRow;
     private List<Element> elementList;
 
     public String getTableName() {
@@ -18,19 +19,27 @@ public class PageTable {
         this.tableName = tableName;
     }
 
-    public String getEleExample() {
-        return eleExample;
-    }
-
-    public void setEleExample(String eleExample) {
-        this.eleExample = eleExample;
-    }
-
     public List<Element> getElementList() {
         return elementList;
     }
 
     public void setElementList(List<Element> elementList) {
         this.elementList = elementList;
+    }
+
+    public int getIsList() {
+        return isList;
+    }
+
+    public void setIsList(int isList) {
+        this.isList = isList;
+    }
+
+    public int getTdNumRow() {
+        return tdNumRow;
+    }
+
+    public void setTdNumRow(int tdNumRow) {
+        this.tdNumRow = tdNumRow;
     }
 }

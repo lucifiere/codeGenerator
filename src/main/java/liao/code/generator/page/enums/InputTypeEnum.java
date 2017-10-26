@@ -6,12 +6,15 @@ import liao.utils.EnumValue;
  * Created by ao on 2017/10/25.
  */
 public enum InputTypeEnum implements EnumValue{
-    TEXT(1,"text","getElementById"),
+    INPUT_TEXT(1,"inputText","getElementById"),
     RADIO(2,"radio","getRadioValue"),
-    CHECKBOX(3,"checkbox","getCheckBoxValues");
+    CHECKBOX(3,"checkbox","getCheckBoxValues"),
+    TEXT(4,"TEXT",""),
+    SELECT(5,"select","getElementById");
     private int value;
     private String desc;
     private String getValueMethod;
+    private String htmlModel;
     InputTypeEnum(int value, String desc,String getValueMethod) {
         this.value = value;
         this.desc = desc;

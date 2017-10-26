@@ -6,6 +6,7 @@ import liao.code.generator.page.enums.LengthLimitEnum;
 import liao.code.generator.page.enums.NullableEnum;
 import liao.code.generator.page.enums.ValueTypeEnum;
 import liao.code.generator.page.model.Element;
+import liao.code.generator.page.model.Page;
 import liao.code.generator.page.model.PageTable;
 import liao.parse.table.model.Table;
 import liao.utils.CommonUtils;
@@ -17,10 +18,17 @@ import java.util.List;
  * Created by ao on 2017/10/24.
  */
 public class JsGenerator extends AbstractCodeGenerator{
+    protected String replaceModelCode(Table table, Page page, String model) {
+        String formData = getFormData(page.getPageTableList());
+        String checkFormData = checkFormData(page.getPageTableList());
+        model = model.replaceAll("#getFormData#",formData);
+        model = model.replaceAll("#checkFormData#",checkFormData);
+        return model;
+    }
     protected String replaceModelCode(Table table, String model){
         return model;
     }
-    private StringBuilder getFormData(List<PageTable> page,String getEleModel){
+    private String getFormData(List<PageTable> page){
         StringBuilder formData = new StringBuilder();
         formData.append("var #alias# = new Object();");
         for(PageTable table : page){
@@ -32,7 +40,7 @@ public class JsGenerator extends AbstractCodeGenerator{
             }
         }
         formData.append("return #alias#;");
-        return formData;
+        return formData.toString();
     }
     private String checkFormData(List<PageTable> page){
         StringBuilder checkData = new StringBuilder();
