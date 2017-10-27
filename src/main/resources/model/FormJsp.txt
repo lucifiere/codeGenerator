@@ -6,7 +6,9 @@
     <head>
 	    <title>#title#</title>
     </head>
-    <body>
+    <body style="overflow-x: hidden;">
+        <div class="order_information pb10">
 #content#
+        </div>
     </body>
 <html>
