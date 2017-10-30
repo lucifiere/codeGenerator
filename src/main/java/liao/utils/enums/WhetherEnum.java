@@ -10,21 +10,13 @@ public enum WhetherEnum implements EnumValue {
     YES(1, "是", "Y");
 
     private int value;
-    private String name;
+    private String desc;
     private String alias;
 
     private WhetherEnum(int index, String name, String alias) {
         this.value = index;
-        this.name = name;
+        this.desc = name;
         this.alias = alias;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public String getAlias() {
@@ -42,5 +34,14 @@ public enum WhetherEnum implements EnumValue {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

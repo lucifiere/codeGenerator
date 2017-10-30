@@ -5,4 +5,5 @@ package liao.utils;
  */
 public interface EnumValue {
     int getValue();
+    String getDesc();
 }

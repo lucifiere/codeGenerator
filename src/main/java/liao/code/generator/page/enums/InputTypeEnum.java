@@ -9,43 +9,43 @@ import java.util.Properties;
  * Created by ao on 2017/10/25.
  */
 public enum InputTypeEnum implements EnumValue{
-    INPUT_TEXT(1,"inputText","getElementById") {
+    INPUT_TEXT(1,"输入框","getElementById") {
         @Override
         public String htmlModel() {
             return pro.getProperty("input_text_model");
         }
     },
-    RADIO(2,"radio","getRadioValue") {
+    RADIO(2,"单选按钮","getRadioValue") {
         @Override
         public String htmlModel() {
             return pro.getProperty("radio_model");
         }
     },
-    CHECKBOX(3,"checkbox","getCheckBoxValues") {
+    CHECKBOX(3,"复选框","getCheckBoxValues") {
         @Override
         public String htmlModel() {
             return pro.getProperty("checkbox_model");
         }
     },
-    TEXT(4,"TEXT","") {
+    TEXT(4,"纯文本","") {
         @Override
         public String htmlModel() {
             return pro.getProperty("text_model");
         }
     },
-    SELECT(5,"select","getElementById") {
+    SELECT(5,"下拉类别","getElementById") {
         @Override
         public String htmlModel() {
             return pro.getProperty("select_model");
         }
     },
-    DATE(6,"date","getElementById") {
+    DATE(6,"日期控件","getElementById") {
         @Override
         public String htmlModel() {
             return pro.getProperty("date_html_model");
         }
     },
-    DATE_TIME(7,"datetime","getElementById") {
+    DATE_TIME(7,"时间控件","getElementById") {
         @Override
         public String htmlModel() {
             return pro.getProperty("datetime_html_model");

@@ -1,9 +1,8 @@
-package liao.code.generator.page.generator;
+package liao.code.generator.page.form;
 
 import liao.code.generator.AbstractCodeGenerator;
 import liao.code.generator.page.enums.InputTypeEnum;
 import liao.code.generator.page.enums.LengthLimitEnum;
-import liao.code.generator.page.enums.NullableEnum;
 import liao.code.generator.page.enums.ValueTypeEnum;
 import liao.code.generator.page.model.Element;
 import liao.code.generator.page.model.Page;

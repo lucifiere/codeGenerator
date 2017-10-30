@@ -1,5 +1,7 @@
 package liao.code.generator.page.model;
 
+import liao.code.generator.page.enums.InputTypeEnum;
+
 import java.util.List;
 
 /**
@@ -8,14 +10,19 @@ import java.util.List;
 public class Element {
     private String eleName; //中文名称
     private String colName; //对应的字段
+    private String dbColName;
+    private String dbComment;
     private String dbTable; //所在表
     private String beanName; //锁在bean名称
-    private Integer inputType;  //输入类型
+    private Integer inputType = InputTypeEnum.INPUT_TEXT.getValue();  //输入类型
     private int isNullable; //必填
     private Integer lengthLimit; //长度限制
+    /**
+     * ValueTypeEnum
+     */
     private int typeLimit; //输入值限制
     private List<String> valueList;  //可选值
-    private int isTableHead; //是不是表头
+    private int isTableTitle = 0; //是不是表头
 
     public String getEleName() {
         return eleName;
@@ -81,13 +88,6 @@ public class Element {
         this.valueList = valueList;
     }
 
-    public int getIsTableHead() {
-        return isTableHead;
-    }
-
-    public void setIsTableHead(int isTableHead) {
-        this.isTableHead = isTableHead;
-    }
     public String toString(){
         return eleName +"="+beanName+"."+colName;
     }
@@ -98,5 +98,29 @@ public class Element {
 
     public void setInputType(Integer inputType) {
         this.inputType = inputType;
+    }
+
+    public int getIsTableTitle() {
+        return isTableTitle;
+    }
+
+    public void setIsTableTitle(int isTableTitle) {
+        this.isTableTitle = isTableTitle;
+    }
+
+    public String getDbColName() {
+        return dbColName;
+    }
+
+    public void setDbColName(String dbColName) {
+        this.dbColName = dbColName;
+    }
+
+    public String getDbComment() {
+        return dbComment;
+    }
+
+    public void setDbComment(String dbComment) {
+        this.dbComment = dbComment;
     }
 }

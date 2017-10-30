@@ -6,6 +6,7 @@ import liao.code.generator.back.factory.RegistrationFactory;
 import liao.code.generator.back.sql.SqlGenerator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
+import liao.utils.CommonUtils;
 import liao.utils.NameUtils;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ParseMySQLDDL {
         String colType = eles[1];
         String colComment = eles[eles.length-1];
         String camelColName = NameUtils.underline2Camel(colName);//转成驼峰命名
-        String colJavaType = sqlTypeToJavaType(colType);
+        String colJavaType = CommonUtils.sqlTypeToJavaType(colType);
         Column col = new Column();
         col.setColName(colName);
         col.setCamelColName(camelColName);
@@ -62,21 +63,6 @@ public class ParseMySQLDDL {
         col.setColJavaType(colJavaType);
         col.setComment(colComment);
         return col;
-    }
-    private static String sqlTypeToJavaType(String sqlType){
-        sqlType = sqlType.replaceAll("\\(.+\\)","").toUpperCase();//去掉括号
-        if(sqlType.equals("BIGINT")){
-            return "Long";
-        }else if(sqlType.equals("INT") || sqlType.equals("SMALLINT") || sqlType.equals("TINYINT")){
-            return "Integer";
-        }else if (sqlType.equals("CHAR") || sqlType.equals("VARCHAR")){
-            return "String";
-        }else if(sqlType.equals("DATE") || sqlType.equals("DATETIME")){
-            return "Date";
-        }else if(sqlType.equals("DECIMAL")){
-            return "BigDecimal";
-        }
-        return sqlType;
     }
     private static String getTableName(String firstLine){
         String tableName = firstLine.substring(firstLine.indexOf("`")+1,firstLine.lastIndexOf("`"));

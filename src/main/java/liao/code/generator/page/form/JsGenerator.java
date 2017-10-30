@@ -1,4 +1,4 @@
-package liao.code.generator.page.generator;
+package liao.code.generator.page.form;
 
 import liao.code.generator.AbstractCodeGenerator;
 import liao.code.generator.page.enums.InputTypeEnum;

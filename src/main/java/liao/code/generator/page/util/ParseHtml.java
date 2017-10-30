@@ -1,6 +1,8 @@
 package liao.code.generator.page.util;
 
+import liao.code.generator.page.enums.InputTypeEnum;
 import liao.code.generator.page.model.Element;
+import liao.code.generator.page.model.Page;
 import liao.code.generator.page.model.PageTable;
 import liao.utils.PropertyUtils;
 import liao.utils.ReaderUtils;
@@ -38,7 +40,8 @@ public class ParseHtml {
     private static final Pattern HAS_TAG_PATTERN = Pattern.compile(HAS_TAG);
 
 
-    public static PageTable getAllElement(String path){
+    public static Page getAllElement(String path){
+        Page page = new Page();
         try {
             List<String> htmlLines = ReaderUtils.readAllLines(path);
             PageTable pageTable = new PageTable();
@@ -58,7 +61,9 @@ public class ParseHtml {
                 elementList.addAll(getElementNameList(line));
 
             }
-            return pageTable;
+            List<PageTable> pageTableList = new ArrayList<>(1);
+            page.setPageTableList(pageTableList);
+            return page;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -87,6 +92,14 @@ public class ParseHtml {
         }
         return htmlLines.size()-1;
     }
+
+    /**
+     * 递归查找出所有的匹配标签，请从1开始
+     * @param startTagCount
+     * @param tagName
+     * @param html
+     * @return
+     */
     private static Result noMatchTagCount(int startTagCount,String tagName,String html){
         for(;;) {
             int startTagIndex = html.indexOf("<" + tagName);
@@ -143,6 +156,7 @@ public class ParseHtml {
             if(!type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(name)) {
                 Element ele = new Element();
                 ele.setEleName(name);
+                ele.setInputType(getInputType(line));
                 elementList.add(ele);
             }
         }
@@ -168,6 +182,13 @@ public class ParseHtml {
 
     }
 
+    private static Integer getInputType(String line){
+        return InputTypeEnum.INPUT_TEXT.getValue();
+    }
+    private static List<String> getValueList(List<String> htmlLines,int index){
+        return null;
+    }
+
     static class Result{
         int noMatchCount;
         String noParseHtml;
@@ -178,7 +199,6 @@ public class ParseHtml {
         }
     }
     public static void main(String[] args){
-        System.out.println(getAllElement("C:/Users/ao/Desktop/html.html").getElementList());
     }
 
 }
