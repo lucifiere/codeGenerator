@@ -8,7 +8,7 @@
          version="3.1">
 
     <welcome-file-list>
-        <welcome-file>/index.jsp</welcome-file>
+        <welcome-file>/jsp/start.jsp</welcome-file>
     </welcome-file-list>
 
     <!-- 配置前端控制器 -->
@@ -24,8 +24,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>*.do</url-pattern>
-        <url-pattern>/</url-pattern>
+        <url-pattern>*.*</url-pattern>
     </servlet-mapping>
 
     <display-name>Archetype Created Web Application</display-name>

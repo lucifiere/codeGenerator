@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConfController {
     private static final ConcurrentHashMap<String,List<Table>> tableCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String,Page> pageCache = new ConcurrentHashMap<>();
+    @RequestMapping("start")
     public ModelAndView start(){
         ModelAndView mv = new ModelAndView("start");
         return mv;
