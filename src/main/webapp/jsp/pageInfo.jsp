@@ -95,25 +95,10 @@
 </body>
 <script type="text/javascript">
     function getPageInfo() {
-        var tableName = ifBlankReturnNull(document.getElementById("tableName").value);
-        var htmlPath = ifBlankReturnNull(document.getElementById("htmlPath").value);
-        if (tableName == null || tableName.trim() == "") {
-            alert("请输入设计的表名称！");
-            return;
-        }
-        $.ajax({
-            type: "post",
-            url: CAR_PATH + "/repay/core/bill/controller/repayingBillController/toReissue?",
-            dataType: "json",
-            data: {"tableName": tableName, "htmlPath": htmlPath},
-            async: false,
-            error: function (xhr, status, err) {
-                alert(err);
-            },
-            success: function (data) {
-                alert(data.messages);
-            }
-        });
+
+    }
+    function createNewTable(){
+
     }
 </script>
 </html>
