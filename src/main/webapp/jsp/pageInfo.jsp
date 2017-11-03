@@ -28,6 +28,7 @@
     </table>
         <table width="100%" class="table-7">
         <thead>
+        <th >序号</th>
         <th >页面字段名</th>
         <th>来源表名</th>
         <th>数据库字段名</th>
@@ -40,8 +41,9 @@
         <th>是否表格标题</th>
         </thead>
         <tbody>
-        <c:forEach items="${table.elementList}" var="element">
+        <c:forEach items="${table.elementList}" var="element" varStatus="ele">
         <tr>
+            <td ><input type="text" value="${ele.index + 1}" name="eleName" size="2"></td>
             <td ><input type="text" value="${element.eleName}" name="eleName" size="16"></td>
             <td><input type="text" value="${element.dbTable}" name="dbTable" size="20"></td>
             <td><input type="text" value="${element.dbColName}" name="dbColName" size="16"></td>
