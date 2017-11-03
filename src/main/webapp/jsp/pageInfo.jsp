@@ -28,7 +28,7 @@
     </table>
         <table width="100%" class="table-7">
         <thead>
-        <th >序号</th>
+        <th >正确顺序</th>
         <th >页面字段名</th>
         <th>来源表名</th>
         <th>数据库字段名</th>
