@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set value="${pageContext.request.contextPath}" var="basePath" scope="page"/>
 <c:forEach items="${pageInfo.pageTableList}" var="table">
-    <table width="1100" class="table-1" border="0" cellpadding="3"
+    <table width="100%" class="table-1" border="0" cellpadding="3"
            cellspacing="1">
         <tr>
             <td>表格名称</td>
@@ -26,28 +26,27 @@
             <td><input type="text" value="${table.tdNumRow}" name="tdNumRow"></td>
         </tr>
     </table>
-        <table class="table_1" border="0" cellpadding="3"
-        cellspacing="1">
+        <table width="100%" class="table-7">
         <thead>
-        <th>页面字段名</th>
+        <th >页面字段名</th>
         <th>来源表名</th>
         <th>数据库字段名</th>
         <th>数据库字段说明</th>
-        <th>来源bean名称</th>
+        <th >来源bean名称</th>
         <th>页面输入类型</th>
         <th>值类型限制</th>
         <th>是否允许为空</th>
-        <th>长度限制</th>
+        <th >长度限制</th>
         <th>是否表格标题</th>
         </thead>
         <tbody>
         <c:forEach items="${table.elementList}" var="element">
         <tr>
-            <td><input type="text" value="${element.eleName}" name="eleName"></td>
-            <td><input type="text" value="${element.dbTable}" name="dbTable"></td>
-            <td><input type="text" value="${element.dbColName}" name="dbColName"></td>
-            <td><input type="text" value="${element.dbComment}" name="dbComment"></td>
-            <td><input type="text" value="${element.beanName}" name="beanName"></td>
+            <td ><input type="text" value="${element.eleName}" name="eleName" size="16"></td>
+            <td><input type="text" value="${element.dbTable}" name="dbTable" size="20"></td>
+            <td><input type="text" value="${element.dbColName}" name="dbColName" size="16"></td>
+            <td  ><input type="text" value="${element.dbComment}" name="dbComment" size="16" disabled></td>
+            <td ><input type="text" value="${element.beanName}" name="beanName" size="16"></td>
             <td>
                 <select name="inputType">
                     <c:forEach items="${inputTypeList }" var="inputType">
@@ -57,24 +56,25 @@
                 </select>
             </td>
             <td>
-                <select name="isNullable">
+                <select style="width: 80px" name="typeLimit">
+                    <c:forEach items="${valueTypeList }" var="valueType">
+                        <option  value="${valueType.value}"
+                                 <c:if test="${valueType.value eq  element.typeLimit}">selected</c:if>>${valueType.desc}</option>
+                    </c:forEach>
+                </select>
+            </td >
+            <td >
+                <select style="width: 70px" name="isNullable">
                     <c:forEach items="${whetherList }" var="whether">
                         <option value="${whether.value}"
                                 <c:if test="${whether.value eq  element.isNullable}">selected</c:if>>${whether.desc}</option>
                     </c:forEach>
                 </select>
-            </td>
-            <td>
-                <select name="typeLimit">
-                    <c:forEach items="${valueTypeList }" var="valueType">
-                        <option value="${valueType.value}"
-                                <c:if test="${valueType.value eq  element.typeLimit}">selected</c:if>>${valueType.desc}</option>
-                    </c:forEach>
-                </select>
-            </td>
-            <td><input type="text" value="${element.lengthLimit}" name="lengthLimit"></td>
-            <td>
-                <select name="isTableTitle" onchange="createNewTable(this)">
+            </td >
+
+            <td ><input size="5" type="text" value="${element.lengthLimit}" name="lengthLimit"></td>
+            <td >
+                <select style="width: 70px" name="isTableTitle" onchange="createNewTable(this)">
                     <c:forEach items="${whetherList }" var="whether">
                         <option value="${whether.value}"
                                 <c:if test="${whether.value eq  element.isTableTitle}">selected</c:if>>${whether.desc}</option>

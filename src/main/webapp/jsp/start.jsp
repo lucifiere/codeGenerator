@@ -31,6 +31,14 @@
     </tr>
     <tr>
         <td width="20%" align="right" bgcolor="#FFFFFF">
+            <label class="control-inline"><font color=red>*</font>需要忽略的字符：</label>
+        </td>
+        <td width="80%" align="left" bgcolor="#FFFFFF">
+            <input type="text" id="ingoreChar" maxlength="500" size="120">
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right" bgcolor="#FFFFFF">
             <label class="control-inline"><font color=red>*</font>是否使用缓存：</label>
         </td>
         <td width="80%" align="left" bgcolor="#FFFFFF">
@@ -41,10 +49,11 @@
         </td>
     </tr>
 </table>
+<div align="center">
+    <input type="button" class="button1" onclick="toPage()" value="确定">
+</div>
 <div id="pageConf">
-    <div align="center">
-        <input type="button" class="button1" onclick="toPage()" value="确定">
-    </div>
+
 </div>
 </body>
 <script>

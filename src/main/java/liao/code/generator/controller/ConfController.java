@@ -71,7 +71,7 @@ public class ConfController {
         Page page = ParseHtml.getAllElement(path);
         List<Element> elementList = page.getPageTableList().get(0).getElementList();
         for(Element element : elementList){
-            TwoTuple<Table,Column> twoTuple  = ColNameSearchUtils.getMatchCol(tableList,element.getEleName());
+            TwoTuple<Table,Column> twoTuple  = new ColNameSearchUtils().getMatchCol(tableList,element.getEleName());
             if(twoTuple != null){
                 Column col = twoTuple.getValue();
                 Table table = twoTuple.getKey();
