@@ -34,7 +34,7 @@ public class BeanClassGenerator extends AbstractClassGenerator {
             content.append("    public "+ col.getColJavaType() + " " +getMethod + "(){"+System.lineSeparator());
             content.append("        return "+col.getCamelColName()+";"+System.lineSeparator());
             content.append("    }"+System.lineSeparator());
-            content.append("    public "+ col.getColJavaType() + " " +setModel + "(" +col.getColJavaType()+" "+ col.getCamelColName()+ "){"+System.lineSeparator());
+            content.append("    public void " +setModel + "(" +col.getColJavaType()+" "+ col.getCamelColName()+ "){"+System.lineSeparator());
             content.append("        this."+col.getCamelColName()+" = "+col.getCamelColName()+";"+System.lineSeparator());
             content.append("    }"+System.lineSeparator());
         }
