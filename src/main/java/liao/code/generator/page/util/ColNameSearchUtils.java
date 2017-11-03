@@ -16,10 +16,10 @@ public class ColNameSearchUtils {
         TreeSet<Result> tree = new TreeSet<>();
         for(int i = 0;i < tableList.size(); i++){
             Table table = tableList.get(i);
-            tree.add(getMatchCol(table,eleName,i));
+            ifNotNullAddTree(getMatchCol(table,eleName,i),tree);
         }
-        Result result = tree.last();
-        return new TwoTuple<Table,Column>(result.table,result.column);
+        Result result = notEmptyGetLast(tree);
+        return result == null ? null : new TwoTuple<Table,Column>(result.table,result.column);
     }
     public static Result getMatchCol(Table table,String eleName,int i){
         Result matchCol = pageMatchDB(table,eleName,i);
@@ -28,24 +28,33 @@ public class ColNameSearchUtils {
     private static Result pageMatchDB(Table table,String eleName,int tableIndex){
 
         TreeSet<Result> tree = new TreeSet<Result>();
-        tree.add(orderMatch(table,eleName,tableIndex));
-        tree.add(reverseMatch(table,eleName,tableIndex));
-        return tree.last();
+        ifNotNullAddTree(orderMatch(table,eleName,tableIndex),tree);
+        ifNotNullAddTree(reverseMatch(table, eleName, tableIndex),tree);
+        return notEmptyGetLast(tree);
+    }
+    private static void ifNotNullAddTree(Result result,TreeSet<Result> tree){
+        if(result != null) {
+            tree.add(result);
+        }
+    }
+    private static Result notEmptyGetLast(TreeSet<Result> tree){
+        return tree.isEmpty() ? null : tree.last();
     }
 
     private static Result orderMatch(Table table,String eleName,int tableIndex){
         List<Column> columnList = table.getColumnList();
         TreeSet<Result> matchColSet = new TreeSet<>();
         int minLen = minLength < eleName.length() ? eleName.length() : minLength;
-        for(int i = eleName.length(); i <= minLen;i--){
-            String matchStr = eleName.substring(1,i-1);
+        for(int i = eleName.length(); i >= minLen;i--){
+            String matchStr = eleName.substring(0,i);
             for(Column col : columnList){
                 String comment = col.getComment().split(" |:|：")[0];
-                comment.contains(matchStr);
-                matchColSet.add(new Result(i,true,col,table,true,Math.abs(eleName.length()-comment.length()),tableIndex));
+                if(comment.contains(matchStr)) {
+                    matchColSet.add(new Result(i, true, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
+                }
             }
         }
-        return matchColSet.last();
+        return notEmptyGetLast(matchColSet);
     }
     private static Result reverseMatch(Table table,String eleName,int tableIndex){
         List<Column> columnList = table.getColumnList();
@@ -55,11 +64,12 @@ public class ColNameSearchUtils {
             String matchStr = eleName.substring(eleName.length()-i,eleName.length());
             for(Column col : columnList){
                 String comment = col.getComment().split(" |:|：")[0];
-                comment.contains(matchStr);
-                matchColSet.add(new Result(i,false,col,table,true,Math.abs(eleName.length()-comment.length()),tableIndex));
+                if(comment.contains(matchStr)) {
+                    matchColSet.add(new Result(i, false, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
+                }
             }
         }
-        return matchColSet.last();
+        return notEmptyGetLast(matchColSet);
     }
     private static Column dbMatchPage(List<Column> columnList,String eleName){
         return null;

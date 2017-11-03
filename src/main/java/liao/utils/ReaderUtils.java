@@ -30,7 +30,7 @@ public class ReaderUtils {
     }
     public static List<String> readAllLines(String path) throws IOException {
         List<String> modelText = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path),"UTF-8"))) {
             String line = null;
             while((line = reader.readLine()) != null){
                 modelText.add(line);

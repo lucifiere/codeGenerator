@@ -2,22 +2,23 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"
          contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set value="${pageContext.request.contextPath}" var="basePath" scope="page"/>
 <html>
 <head>
     <title>开始</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv ="X-UA-Compatible" content ="IE=edge">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
-    <script src="${pageContext.request.contextPath}/js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="${basePath}/css/common.css"/>
+    <script src="${basePath}/js/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${basePath}/js/common.js"></script>
 </head>
 <body>
-<table width="1100" class="table-1" bgcolor="#FFFFFF" border="0" cellpadding="3"
-       cellspacing="1">
+<table width="1100" class="table-6" bgcolor="#FFFFFF" border="0" cellpadding="3" cellspacing="1">
     <tr>
         <td width="20%" align="right" bgcolor="#FFFFFF">
             <label class="control-inline"><font color=red>*</font>表名：</label>
         </td>
-        <td width="80%" align="left" bgcolor="#FFFFFF"><input type="text" id="tableName" maxlength="120" size="120">
+        <td width="80%" align="left" bgcolor="#FFFFFF"><input type="text" id="tableName" maxlength="500" size="120">
         </td>
     </tr>
     <tr>
@@ -25,7 +26,7 @@
             <label class="control-inline"><font color=red>*</font>原型地址：</label>
         </td>
         <td width="80%" align="left" bgcolor="#FFFFFF">
-            <input type="text" id="htmlPath" maxlength="120" size="120">
+            <input type="text" id="htmlPath" maxlength="500" size="120">
         </td>
     </tr>
     <tr>
@@ -40,16 +41,31 @@
         </td>
     </tr>
 </table>
-    <input type="button" onclick="toPage()" value="确定">
+<div id="pageConf">
+    <div align="center">
+        <input type="button" class="button1" onclick="toPage()" value="确定">
+    </div>
+</div>
 </body>
 <script>
     function toPage(){
-        var tableName = ifBlankReturnNull(document.getElementById("tableName").value);
-        if(tableName == null || tableName.trim() == ""){
-            alert("请输入涉及到的数据库表名称！");
-            return;
-        }
-        window.open("http://localhost:8080/codeGenerator/page/init.do" ,'_blank','height=800, width=1250, top=150, left=300,status=yes,toolbar=no,menubar=no,location=yes,scrollbars=yes,resizable=no');
+        var tableName = document.getElementById("tableName").value;
+        var htmlPath = document.getElementById("htmlPath").value;
+        var useCache = document.getElementById("useCache").value;
+        $.ajax({
+            type: "post",
+            url: "${basePath}/conf/getPageConf.do?tableNames="+tableName+"&htmlPath="+htmlPath+"&useCache="+useCache,
+            data: JSON.stringify({}),
+            dataType: "html",
+            contentType: "application/json",
+            async: false,
+            error: function () {
+                alert("查询失败");
+            },
+            success: function (data) {
+                $("#pageConf").html(data);
+            }
+        });
     }
     function ifBlankReturnNull(str) {
         return str == null || str.trim().length == 0 ? null : str.trim();

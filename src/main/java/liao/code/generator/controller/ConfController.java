@@ -1,6 +1,5 @@
 package liao.code.generator.controller;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import liao.code.generator.page.enums.InputTypeEnum;
 import liao.code.generator.page.enums.ValueTypeEnum;
 import liao.code.generator.page.model.Element;
@@ -10,11 +9,11 @@ import liao.code.generator.page.util.ParseHtml;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
-import liao.utils.CommonUtils;
 import liao.utils.TwoTuple;
 import liao.utils.enums.WhetherEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -34,7 +33,9 @@ public class ConfController {
         ModelAndView mv = new ModelAndView("start");
         return mv;
     }
-    public ModelAndView toPageConf(String tableNames,String htmlPath,int useCache){
+    @RequestMapping("getPageConf")
+    @ResponseBody
+    public ModelAndView getPageConf( String tableNames,String htmlPath, Integer useCache){
         List<Table> tableList = null;
         Page page = null;
         if(useCache == WhetherEnum.YES.getValue()){
@@ -43,11 +44,13 @@ public class ConfController {
         }
         if(tableList == null){
             tableList = getTableList(tableNames);
+            tableCache.put(tableNames,tableList);
         }
         if(page == null){
             page = createPageInfo(htmlPath,tableList);
+            pageCache.put(htmlPath,page);
         }
-        ModelAndView mv = new ModelAndView();
+        ModelAndView mv = new ModelAndView("pageInfo");
         mv.addObject("pageInfo",page);
         mv.addObject("inputTypeList", InputTypeEnum.values());
         mv.addObject("valueTypeList", ValueTypeEnum.values());
@@ -69,9 +72,9 @@ public class ConfController {
         List<Element> elementList = page.getPageTableList().get(0).getElementList();
         for(Element element : elementList){
             TwoTuple<Table,Column> twoTuple  = ColNameSearchUtils.getMatchCol(tableList,element.getEleName());
-            Column col = twoTuple.getValue();
-            Table table = twoTuple.getKey();
-            if(col != null){
+            if(twoTuple != null){
+                Column col = twoTuple.getValue();
+                Table table = twoTuple.getKey();
                 element.setColName(col.getCamelColName());
                 element.setDbColName(col.getColName());
                 element.setDbComment(col.getComment());

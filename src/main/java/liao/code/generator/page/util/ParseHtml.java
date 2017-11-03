@@ -62,6 +62,7 @@ public class ParseHtml {
 
             }
             List<PageTable> pageTableList = new ArrayList<>(1);
+            pageTableList.add(pageTable);
             page.setPageTableList(pageTableList);
             return page;
         } catch (IOException e) {

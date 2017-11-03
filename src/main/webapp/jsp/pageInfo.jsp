@@ -1,14 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" import="java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set value="${pageContext.request.contextPath}" var="contextPath" scope="page"/>
-
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="${contextPath}/css/common.css"/>
-    <title>页面配置</title>
-</head>
-<body>
+<c:set value="${pageContext.request.contextPath}" var="basePath" scope="page"/>
 <c:forEach items="${pageInfo.pageTableList}" var="table">
     <table width="1100" class="table-1" border="0" cellpadding="3"
            cellspacing="1">
@@ -31,12 +23,10 @@
                 </select>
             </td>
             <td>每行列数</td>
-            <td><input type="text" value="${table.tdNum}" name="tdNum"></td>
+            <td><input type="text" value="${table.tdNumRow}" name="tdNumRow"></td>
         </tr>
     </table>
-    <c:forEach items="${table.elementList}" var="element">
-
-        <table width="1100" class="table_1" border="0" cellpadding="3"
+        <table class="table_1" border="0" cellpadding="3"
         cellspacing="1">
         <thead>
         <th>页面字段名</th>
@@ -51,6 +41,7 @@
         <th>是否表格标题</th>
         </thead>
         <tbody>
+        <c:forEach items="${table.elementList}" var="element">
         <tr>
             <td><input type="text" value="${element.eleName}" name="eleName"></td>
             <td><input type="text" value="${element.dbTable}" name="dbTable"></td>
@@ -68,14 +59,16 @@
             <td>
                 <select name="isNullable">
                     <c:forEach items="${whetherList }" var="whether">
-                        <option value="${whether.value}">${whether.desc}</option>
+                        <option value="${whether.value}"
+                                <c:if test="${whether.value eq  element.isNullable}">selected</c:if>>${whether.desc}</option>
                     </c:forEach>
                 </select>
             </td>
             <td>
-                <select name="valueType">
+                <select name="typeLimit">
                     <c:forEach items="${valueTypeList }" var="valueType">
-                        <option value="${valueType.value}">${valueType.desc}</option>
+                        <option value="${valueType.value}"
+                                <c:if test="${valueType.value eq  element.typeLimit}">selected</c:if>>${valueType.desc}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -83,7 +76,8 @@
             <td>
                 <select name="isTableTitle" onchange="createNewTable(this)">
                     <c:forEach items="${whetherList }" var="whether">
-                        <option value="${whether.value}">${whether.desc}</option>
+                        <option value="${whether.value}"
+                                <c:if test="${whether.value eq  element.isTableTitle}">selected</c:if>>${whether.desc}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -92,13 +86,4 @@
     </tbody>
     </table>
 </c:forEach>
-</body>
-<script type="text/javascript">
-    function getPageInfo() {
 
-    }
-    function createNewTable(){
-
-    }
-</script>
-</html>
