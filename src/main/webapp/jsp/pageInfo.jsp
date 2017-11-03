@@ -29,6 +29,7 @@
         <table width="100%" class="table-7">
         <thead>
         <th >正确顺序</th>
+        <th>是否表格标题</th>
         <th >页面字段名</th>
         <th>来源表名</th>
         <th>数据库字段名</th>
@@ -38,12 +39,19 @@
         <th>值类型限制</th>
         <th>是否允许为空</th>
         <th >长度限制</th>
-        <th>是否表格标题</th>
         </thead>
         <tbody>
         <c:forEach items="${table.elementList}" var="element" varStatus="ele">
         <tr>
             <td ><input type="text" value="${ele.index + 1}" name="eleName" size="2"></td>
+            <td >
+                <select style="width: 70px" name="isTableTitle" onchange="createNewTable(this)">
+                    <c:forEach items="${whetherList }" var="whether">
+                        <option value="${whether.value}"
+                                <c:if test="${whether.value eq  element.isTableTitle}">selected</c:if>>${whether.desc}</option>
+                    </c:forEach>
+                </select>
+            </td>
             <td ><input type="text" value="${element.eleName}" name="eleName" size="16"></td>
             <td><input type="text" value="${element.dbTable}" name="dbTable" size="20"></td>
             <td><input type="text" value="${element.dbColName}" name="dbColName" size="16"></td>
@@ -75,14 +83,6 @@
             </td >
 
             <td ><input size="5" type="text" value="${element.lengthLimit}" name="lengthLimit"></td>
-            <td >
-                <select style="width: 70px" name="isTableTitle" onchange="createNewTable(this)">
-                    <c:forEach items="${whetherList }" var="whether">
-                        <option value="${whether.value}"
-                                <c:if test="${whether.value eq  element.isTableTitle}">selected</c:if>>${whether.desc}</option>
-                    </c:forEach>
-                </select>
-            </td>
         </tr>
     </c:forEach>
     </tbody>
