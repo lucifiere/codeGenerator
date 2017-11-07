@@ -27,7 +27,7 @@ public class ParseTableForMySQL {
             conn = getConnection();
             Statement stat = getStatement(conn);
             ResultSet rs = stat.executeQuery(tableDefineSQL);
-            List<Column> columnList = convertToColumnList(rs);
+            List<Column> columnList = convertToColumnList(rs,table.getTableName());
             table.setColumnList(columnList);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -47,7 +47,7 @@ public class ParseTableForMySQL {
     public Statement getStatement(Connection conn) throws SQLException {
         return conn.createStatement();
     }
-    private List<Column> convertToColumnList(ResultSet rs) throws SQLException {
+    private List<Column> convertToColumnList(ResultSet rs,String tableName) throws SQLException {
         List<Column> columnList = new ArrayList<>();
         while(rs.next()){
             String colName = rs.getString("column_name");
@@ -63,6 +63,7 @@ public class ParseTableForMySQL {
             col.setColJavaType(colJavaType);
             col.setComment(colComment);
             col.setNullable(isNullable);
+            col.setTableName(tableName);
             columnList.add(col);
         }
         return columnList;

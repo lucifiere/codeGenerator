@@ -31,6 +31,7 @@ public class ColNameSearchUtils {
         TreeSet<Result> tree = new TreeSet<Result>();
         ifNotNullAddTree(orderMatch(table,eleName,tableIndex),tree);
         ifNotNullAddTree(reverseMatch(table, eleName, tableIndex),tree);
+        ifNotNullAddTree(middleMatch(table, eleName, tableIndex),tree);
         return notEmptyGetFirst(tree);
     }
     private void ifNotNullAddTree(Result result,TreeSet<Result> tree){
@@ -56,7 +57,7 @@ public class ColNameSearchUtils {
                     nextTable = isMatch;
                 }
                 if(isMatch) {
-                    matchColSet.add(new Result(matchStr.length(), true, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
+                    matchColSet.add(new Result(matchStr.length(), 1, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
                 }
             }
             if(nextTable){
@@ -65,8 +66,41 @@ public class ColNameSearchUtils {
         }
         return notEmptyGetFirst(matchColSet);
     }
-    private void isStatusCol(){
 
+    public Result middleMatch(Table table,String eleName,int tableIndex){
+        TreeSet<Result> matchColSet = new TreeSet<>();
+        int minLen = minLength > eleName.length() ? eleName.length() : minLength;
+        int startIndex = 1;
+        int endIndex = 1;
+        for(;;){
+            String matchStr = eleName.substring(startIndex,eleName.length() - endIndex);
+            if(matchStr.length() < minLen){
+                break;
+            }
+            TreeSet<Result> matchCol = strMatchColName(matchStr,eleName,table,tableIndex,3);
+            matchColSet.addAll(matchCol);
+            if(!matchCol.isEmpty()){
+                break;
+            }
+            //先从后往前缩减
+            if(startIndex < endIndex){
+                startIndex++;
+            }else{
+                endIndex++;
+            }
+        }
+        return notEmptyGetFirst(matchColSet);
+    }
+    private TreeSet<Result> strMatchColName(String matchStr,String eleName,Table table,int tableIndex,int type){
+        TreeSet<Result> matchColSet = new TreeSet<>();
+        for(Column col : table.getColumnList()){
+            String comment = col.getComment();
+            boolean isMatch =  comment.contains(matchStr);
+            if(isMatch) {
+                matchColSet.add(new Result(matchStr.length(), type, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
+            }
+        }
+        return matchColSet;
     }
     private Result reverseMatch(Table table,String eleName,int tableIndex){
         List<Column> columnList = table.getColumnList();
@@ -82,7 +116,7 @@ public class ColNameSearchUtils {
                     nextTable = isMatch;
                 }
                 if(isMatch) {
-                    matchColSet.add(new Result(matchStr.length(), false, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
+                    matchColSet.add(new Result(matchStr.length(), 3, col, table, true, Math.abs(eleName.length() - comment.length()), tableIndex));
                 }
             }
             if(nextTable){
@@ -97,14 +131,14 @@ public class ColNameSearchUtils {
 
     private static class Result implements Comparable<Result>{
         int matchLength;//字符相匹配的长度
-        boolean isOrderMatch;//正序匹配
+        int matchOrder;//匹配顺序
         Column column;
         private Table table;
         boolean isPageMatchDB;//是否页面匹配字段名匹配数据库成功
         int lengthDiff;//相匹配的字符串字符数差
         int tableIndex;//第几张表匹配
         public Result(int matchLength,
-                boolean isOrderMatch,
+                int matchOrder,
                 Column column, Table table,
                 boolean isPageMatchDB,
                 int lengthDiff,
@@ -112,7 +146,7 @@ public class ColNameSearchUtils {
             this.column = column;
             this.table = table;
             this.matchLength = matchLength;
-            this.isOrderMatch = isOrderMatch; //正序匹配
+            this.matchOrder = matchOrder; //正序匹配
             this.isPageMatchDB = isPageMatchDB;
             this.lengthDiff = lengthDiff;
             this.tableIndex = tableIndex;
@@ -129,13 +163,13 @@ public class ColNameSearchUtils {
                     return 1;
                 }else {
                     if(this.tableIndex == o.tableIndex) {//第几张表匹配
-                        if (this.isOrderMatch == o.isOrderMatch) {//正序匹配
+                        if (this.matchOrder == o.matchOrder) {//正序匹配
                             if (this.isPageMatchDB) {//是否页面匹配字段名匹配数据库成功
                                 return 1;
                             } else {
                                 return -1;
                             }
-                        } else if (this.isOrderMatch) {
+                        } else if (this.matchOrder < o.matchOrder) {
                             return 1;
                         } else {
                             return -1;

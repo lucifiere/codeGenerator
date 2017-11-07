@@ -1,9 +1,7 @@
 package liao.parse.table.mysql;
 
 import liao.code.generator.AbstractCodeGenerator;
-import liao.code.generator.back.javacode.AbstractClassGenerator;
 import liao.code.generator.back.factory.RegistrationFactory;
-import liao.code.generator.back.sql.SqlGenerator;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.CommonUtils;
@@ -43,12 +41,12 @@ public class ParseMySQLDDL {
         table.setColumnList(columnList);
         for(String oneLine : sqlList){
             if(oneLine.substring(0,1).equals("`")){//是字段定义sql
-                columnList.add(getOneColumn(oneLine));
+                columnList.add(getOneColumn(oneLine,tableName));
             }
         }
         return table;
     }
-    private static Column getOneColumn(String oneLine){
+    private static Column getOneColumn(String oneLine,String tableName){
         oneLine = oneLine.replaceAll("`|'|,","");
         String[] eles = oneLine.split(" ");
         String colName = eles[0];
@@ -62,6 +60,7 @@ public class ParseMySQLDDL {
         col.setColDBType(colType);
         col.setColJavaType(colJavaType);
         col.setComment(colComment);
+        col.setTableName(tableName);
         return col;
     }
     private static String getTableName(String firstLine){

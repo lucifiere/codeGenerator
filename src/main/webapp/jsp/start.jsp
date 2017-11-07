@@ -9,8 +9,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv ="X-UA-Compatible" content ="IE=edge">
     <link rel="stylesheet" type="text/css" href="${basePath}/css/common.css"/>
+<%--
+    <link rel="stylesheet" type="text/css" href="${basePath}/js/plugin/search/search.css"/>
+--%>
     <script src="${basePath}/js/jquery/jquery-3.1.1.min.js"></script>
     <script src="${basePath}/js/common.js"></script>
+    <script src="${basePath}/js/pageInfo.js"></script>
+<%--
+    <script src="${basePath}/js/plugin/search/search.js"></script>
+--%>
+
 </head>
 <body>
 <table width="1100" class="table-6" bgcolor="#FFFFFF" border="0" cellpadding="3" cellspacing="1">
@@ -18,7 +26,7 @@
         <td width="20%" align="right" bgcolor="#FFFFFF">
             <label class="control-inline"><font color=red>*</font>表名：</label>
         </td>
-        <td width="80%" align="left" bgcolor="#FFFFFF"><input type="text" id="tableName" maxlength="500" size="120">
+        <td width="80%" align="left" bgcolor="#FFFFFF"><input type="text" id="tableName" value="t_repay_cbhb_balance,t_repay_cbhb_balance_detail,t_repay_cbhb_info,t_repay_cbhb_punitive_interest,t_repay_cbhb_relation_balancebill,t_repay_cbhb_repayschedule"maxlength="500" size="120">
         </td>
     </tr>
     <tr>
@@ -26,7 +34,7 @@
             <label class="control-inline"><font color=red>*</font>原型地址：</label>
         </td>
         <td width="80%" align="left" bgcolor="#FFFFFF">
-            <input type="text" id="htmlPath" maxlength="500" size="120">
+            <input type="text" id="htmlPath" maxlength="500" size="120" value="C:\Users\ao\Desktop\html.html">
         </td>
     </tr>
     <tr>
@@ -57,6 +65,7 @@
 </div>
 </body>
 <script>
+    var basePath = '${basePath}';
     function toPage(){
         var tableName = document.getElementById("tableName").value;
         var htmlPath = document.getElementById("htmlPath").value;
@@ -72,6 +81,7 @@
                 alert("查询失败");
             },
             success: function (data) {
+                $("#pageConf").html("");
                 $("#pageConf").html(data);
             }
         });

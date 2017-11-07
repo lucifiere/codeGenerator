@@ -10,6 +10,7 @@ public class Column {
     private String colJavaType;
     private String comment;
     private int isNullable;
+    private String tableName;
 
     public String getColName() {
         return colName;
@@ -57,5 +58,13 @@ public class Column {
 
     public void setNullable(int nullable) {
         isNullable = nullable;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

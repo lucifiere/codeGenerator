@@ -16,16 +16,9 @@ function copyRow(button) {
 function copyRowAndValue(button) {
     var table = button.parentNode.parentNode.parentNode;
     var buttonRow = button.parentNode.parentNode;
-    var row = table.insertRow();
-    addRow(row,table);
+    addRow(buttonRow,table);
+}
 
-}
-function copyRowAndValue(button,tableName){
-    var table = document.getElementById(tableName);
-    var buttonRow = button.parentNode.parentNode;
-    var row = table.insertRow();
-    addRow(row,table);
-}
 function addRow(row,table){
     var newRow = table.insertRow();
     for(var i = 0;i < row.cells.length;i++){
@@ -42,4 +35,8 @@ function getRowIndex(button){
 }
 function getRowNum(button){
     return button.parentNode.parentNode.parentNode.rows.length;
+}
+
+function getTable(obj){
+    return obj.parentNode.parentNode.parentNode;
 }

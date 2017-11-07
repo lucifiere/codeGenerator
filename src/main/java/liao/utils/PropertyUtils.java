@@ -1,8 +1,6 @@
 package liao.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -11,7 +9,7 @@ import java.util.Properties;
 public class PropertyUtils {
     public static Properties getConfig(String fileName){
         Properties pro = new Properties();
-        try(InputStream in = PropertyUtils.class.getResourceAsStream("/"+fileName+".properties")) {
+        try(Reader in = new InputStreamReader(PropertyUtils.class.getResourceAsStream("/"+fileName+".properties"),"utf-8")) {
             pro.load(in);
             return pro;
         } catch (IOException e) {

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by ao on 2017/10/17.
  */
-public class Element {
+public class Element{
     private String eleName; //中文名称
     private String colName; //对应的字段
     private String dbColName;

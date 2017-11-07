@@ -66,6 +66,28 @@ public class ConfController {
         }
         return tableList;
     }
+    @RequestMapping("allElementList")
+    @ResponseBody
+    public List<Column> allElementList(String tableNames,String tableName,String colName){
+        List<Table> tableList = tableCache.get(tableNames);
+        if(tableList == null){
+            tableList = getTableList(tableNames);
+            tableCache.put(tableNames,tableList);
+        }
+        List<Column> allColumn = new ArrayList<>();
+        for(Table table : tableList){
+            if(tableName == null || table.getTableName().equals(tableName)) {
+                for(Column col : table.getColumnList()) {
+                    if (colName == null || colName.trim().length() == 0) {
+                        if(col.getColName().contains(colName)){
+                            allColumn.add(col);
+                        }
+                    }
+                }
+            }
+        }
+        return allColumn;
+    }
 
     private Page createPageInfo(String path,List<Table> tableList){
         Page page = ParseHtml.getAllElement(path);
@@ -96,6 +118,36 @@ public class ConfController {
             return ValueTypeEnum.STRING.getValue();
         }
     }
+    @RequestMapping("changeDBColName")
+    @ResponseBody
+    public List<Element> changeDBColName(String dbColName,String tableNames){
+        List<Table> tableList = tableCache.get(tableNames);
+        if(tableList == null){
+            tableList = getTableList(tableNames);
+            tableCache.put(tableNames,tableList);
+        }
+        List<Element> resultList = new ArrayList<>();
+        for(Table table : tableList){
+            for(Column col : table.getColumnList()){
+                if(col.getColName().equals(dbColName)){
+                    resultList.add(createElementByCol(table,col));
+                }
+            }
+        }
+        return resultList;
+    }
+    private Element createElementByCol(Table table,Column col){
+        Element element = new Element();
+        element.setColName(col.getCamelColName());
+        element.setDbColName(col.getColName());
+        element.setDbComment(col.getComment());
+        element.setBeanName(table.getAlias());
+        element.setDbTable(table.getTableName());
+        element.setIsNullable(col.isNullable());
+        element.setTypeLimit(getValueTypeEnum(col.getColJavaType()));
+        return element;
+    }
+
 
 
 }

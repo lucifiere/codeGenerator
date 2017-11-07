@@ -29,6 +29,7 @@ public class ParseHtml {
     private static final String SELECT_TYPE = "("+HANZI+"+)";
     private static final String HAS_TAG = "<|[</][^>]+>";
     private static final String HIDE = PropertyUtils.getConfig("config").getProperty("hide");
+    private static final String SPLIT = PropertyUtils.getConfig("htmlParse").getProperty("split");
     private static final Pattern HIDE_PATTERN = Pattern.compile("(.*)(<[^<]*"+HIDE+".+)");
     private static final String SPECIAL_CHAR = "只|个|元|分|角|查看|清空";
     private static final Pattern GET_HANZI_PATTERN = Pattern.compile(GET_TEXT);
@@ -159,14 +160,25 @@ public class ParseHtml {
             name = name.replaceAll(HANZI_AFTER,"");
             name = name.trim();
             if(!type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(name)) {
-                Element ele = new Element();
-                ele.setEleName(name);
-                ele.setInputType(getInputType(line));
-                elementList.add(ele);
+                String[] names = name.split(SPLIT);
+                for(int i = 0;i < names.length;i++) {
+                    String n = names[i];
+                    //补全特许符号
+                    if(i < names.length -1){
+                        int endIndex = name.indexOf(names[i+1]);
+                        int startIndex = name.indexOf(n);
+                        n = name.substring(startIndex,endIndex);
+                    }
+                    Element ele = new Element();
+                    ele.setEleName(n);
+                    ele.setInputType(getInputType(line));
+                    elementList.add(ele);
+                }
             }
         }
         return elementList;
     }
+
     private static List<String> formatHtml(List<String> htmlLines){
         return htmlLines;
     }

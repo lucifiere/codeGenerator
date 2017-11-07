@@ -24,6 +24,7 @@
             </td>
             <td>每行列数</td>
             <td><input type="text" value="${table.tdNumRow}" name="tdNumRow"></td>
+            <td><input type="button" value="字段按照表名排序" name="orderButton" onclick="orderByTableName(this)"></td>
         </tr>
     </table>
         <table width="100%" class="table-7">
@@ -31,32 +32,32 @@
         <th >正确顺序</th>
         <th>是否表格标题</th>
         <th >页面字段名</th>
-        <th>来源表名</th>
+        <th >来源表名</th>
         <th>数据库字段名</th>
         <th>数据库字段说明</th>
         <th >来源bean名称</th>
         <th>页面输入类型</th>
         <th>值类型限制</th>
-        <th>是否允许为空</th>
+        <th>必填</th>
         <th >长度限制</th>
         </thead>
-        <tbody>
+        <tbody name="table">
         <c:forEach items="${table.elementList}" var="element" varStatus="ele">
         <tr>
-            <td ><input type="text" value="${ele.index + 1}" name="eleName" size="2"></td>
+            <td ><input type="text" value="${ele.index + 1}" name="ordinalNumber" size="3" onchange="changeOrdinalNumber(this)"></td>
             <td >
-                <select style="width: 70px" name="isTableTitle" onchange="createNewTable(this)">
+                <select style="width: 50px" name="isTableTitle" onchange="changeTableTag(this)">
                     <c:forEach items="${whetherList }" var="whether">
                         <option value="${whether.value}"
                                 <c:if test="${whether.value eq  element.isTableTitle}">selected</c:if>>${whether.desc}</option>
                     </c:forEach>
                 </select>
             </td>
-            <td ><input type="text" value="${element.eleName}" name="eleName" size="16"></td>
+            <td ><input type="text" value="${element.eleName}" name="eleName" size="14"></td>
             <td><input type="text" value="${element.dbTable}" name="dbTable" size="20"></td>
-            <td><input type="text" value="${element.dbColName}" name="dbColName" size="16"></td>
-            <td  ><input type="text" value="${element.dbComment}" name="dbComment" size="16" disabled></td>
-            <td ><input type="text" value="${element.beanName}" name="beanName" size="16"></td>
+            <td><input type="text" value="${element.dbColName}" name="dbColName" size="14" onchange="changDBColName(this)"></td>
+            <td  ><input type="text" value="${element.dbComment}" name="dbComment" size="14" disabled></td>
+            <td ><input type="text" value="${element.beanName}" name="beanName" size="14"></td>
             <td>
                 <select name="inputType">
                     <c:forEach items="${inputTypeList }" var="inputType">
@@ -74,7 +75,7 @@
                 </select>
             </td >
             <td >
-                <select style="width: 70px" name="isNullable">
+                <select style="width: 50px" name="isNullable">
                     <c:forEach items="${whetherList }" var="whether">
                         <option value="${whether.value}"
                                 <c:if test="${whether.value eq  element.isNullable}">selected</c:if>>${whether.desc}</option>
@@ -88,4 +89,11 @@
     </tbody>
     </table>
 </c:forEach>
+<%--<script>
+    $("input[name='dbColName']").autoSearchText({ width: 300, itemHeight: 150,minChar:1, datafn: getColList, fn: NONE });
+    $("input[name='dbTable']").autoSearchText({ width: 300, itemHeight: 150,minChar:1, datafn: getTableList, fn: NONE });
+    function NONE(){
+
+    }
+</script>--%>
 
