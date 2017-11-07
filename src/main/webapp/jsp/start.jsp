@@ -39,7 +39,7 @@
     </tr>
     <tr>
         <td width="20%" align="right" bgcolor="#FFFFFF">
-            <label class="control-inline"><font color=red>*</font>需要忽略的字符：</label>
+            <label class="control-inline"><font color=red>*</font>名称前缀字符：</label>
         </td>
         <td width="80%" align="left" bgcolor="#FFFFFF">
             <input type="text" id="ingoreChar" maxlength="500" size="120">

@@ -129,6 +129,14 @@ public class ColNameSearchUtils {
         return null;
     }
 
+    /**
+     * 发现名称前缀部分，提高匹配精度
+     * @return
+     */
+    private String findNamePre(){
+        return  "";
+    }
+
     private static class Result implements Comparable<Result>{
         int matchLength;//字符相匹配的长度
         int matchOrder;//匹配顺序
@@ -170,9 +178,9 @@ public class ColNameSearchUtils {
                                 return -1;
                             }
                         } else if (this.matchOrder < o.matchOrder) {
-                            return 1;
-                        } else {
                             return -1;
+                        } else {
+                            return 1;
                         }
                     }else if(this.tableIndex < o.tableIndex){
                         return 1;
