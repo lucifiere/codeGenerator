@@ -92,7 +92,7 @@ public class ConfController {
         Page page = ParseHtml.getAllElement(path);
         List<Element> elementList = page.getPageTableList().get(0).getElementList();
         for(Element element : elementList){
-            Column col  = new ColNameSearchTools().getMatchCol(tableList,element.getEleName());
+            Column col  = new ColNameSearchTools().contextMatch(tableList,element.getEleName(),"");
             fillElementByCol(col,tableList,element);
         }
         return page;

@@ -34,6 +34,7 @@ public class ColNameSearchTools {
         ifNotNullAddTree(orderMatch(table,eleName,tableIndex),tree);
         ifNotNullAddTree(reverseMatch(table, eleName, tableIndex),tree);
         ifNotNullAddTree(middleMatch(table, eleName, tableIndex),tree);
+        ifNotNullAddTree(wordByWordMatch(table,eleName, tableIndex), tree);
         return notEmptyGetFirst(tree);
     }
     private void ifNotNullAddTree(Result result,TreeSet<Result> tree){
@@ -131,6 +132,25 @@ public class ColNameSearchTools {
         return null;
     }
 
+    private Result wordByWordMatch(Table table,String eleName,int index){
+        if(eleName.length() < 2){
+            return null;
+        }
+        TreeSet<Result> matchColSet = new TreeSet<>();
+        for(Column col : table.getColumnList()) {
+            int matchCount = 0;
+            for (int i = 2; i < eleName.length(); i=i+2) {
+                if(col.getComment().contains(eleName.substring(i-2,i))){
+                    matchCount+=2;
+                }
+            }
+            if(matchCount > 2)
+                //减1是为了降低优先级
+                matchColSet.add(new Result(matchCount-1, 3, col, table, true, Math.abs(eleName.length() - col.getComment().length()), index));
+        }
+        return notEmptyGetFirst(matchColSet);
+    }
+
     /**
      * 发现名称前缀部分，提高匹配精度
      * @return
@@ -156,7 +176,14 @@ public class ColNameSearchTools {
             ifNotNullAddTree(getMatchCol(table, eleName, index), tree);//完全匹配
 
             for (String comment : comments) {
-                ifNotNullAddTree(getMatchCol(table, eleName.replace(comment, ""), index), tree);//移除前最匹配
+                Result result = getMatchCol(table, eleName.replace(comment, ""), index);
+                if(result != null)
+                    result.matchLength += comment.length();
+                ifNotNullAddTree(result, tree);//移除前最匹配
+                result = wordByWordMatch(table,eleName.replace(comment, ""), index);
+                if(result != null)
+                    result.matchLength += comment.length();
+                ifNotNullAddTree(result, tree);
             }
 
             Result rs = notEmptyGetFirst(tree);
