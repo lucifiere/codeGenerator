@@ -56,15 +56,14 @@ function changeTableTag(obj) {
             return;
         }
     }
-    var colNum = getRowNum(obj);
     var table = obj.parentNode.parentNode.parentNode;
     var tableIndex = getTableIndex(table,"table");
     var startIndex = getRowCount(tableIndex-1);
     var endIndex = getRowCount(tableIndex);
     createNewTable();
     var newTable = document.getElementsByName("table")[getTableIndex(table,"table")+1];
-    for(var i = startIndex + index;i < endIndex;i++){
-        addRow(table.rows[i],newTable);
+    for(var i = startIndex + index-1;i < endIndex;i++){
+        copyRowForTable( document.getElementsByName("ordinalNumber")[i],newTable);
     }
     for(var i = startIndex + index-1;i < endIndex;i++){
         table.deleteRow(index-1);
@@ -139,11 +138,11 @@ function orderByTableName(obj){
         copyRowAndValue(dbTables[i]);
     }
 
-    for(var i = 1;i < dbTables.length;i++){
-        table.deleteRow(1);
+    for(var i = 0;i < dbTables.length;i++){
+        table.deleteRow(0);
     }
     var orderNum = document.getElementsByName("ordinalNumber");
-    for(var i = 1;i < dbTables.length;i++){
+    for(var i = 0;i < dbTables.length;i++){
         orderNum[i + startIndex].value = i+1;
     }
     return dbTables;
@@ -177,15 +176,6 @@ function getFirstNotNullTableName(start,startIndex,endIndex){
         }
     }
     return null;
-}
-
-function getRowCount(tableIndex){
-    var tableList = document.getElementsByName("table");
-    var count = 0;
-    for(var i = 0;i <= tableIndex;i++){
-        count += tableList[i].rows.length;
-    }
-    return count;
 }
 
 
@@ -251,4 +241,20 @@ function getColList(obj) {
 function getTableList(){
     var tableName = document.getElementById("tableName");
     return tableName.split(",");
+}
+function emptyTable(obj){
+    var index = getObjIndex(obj,obj.name);
+    var table = document.getElementsByName("table")[index];
+    var rowNum = table.rows.length-1;
+    for(var i = 0;i < rowNum;i++){
+        table.deleteRow(0);
+    }
+    var firstRowIndex = getRowCount(index) - 1;
+    copyRow(document.getElementsByName("ordinalNumber")[firstRowIndex]);
+    table.deleteRow(0);
+    document.getElementsByName("ordinalNumber")[firstRowIndex].value = 1;
+
+}
+function addNewRow(obj) {
+    copyRow(obj);
 }

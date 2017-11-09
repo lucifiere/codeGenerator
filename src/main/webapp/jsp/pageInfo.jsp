@@ -24,11 +24,13 @@
             </td>
             <td>每行列数</td>
             <td><input type="text" value="${table.tdNumRow}" name="tdNumRow"></td>
-            <td><input type="button" value="字段按照表名排序" name="orderButton" onclick="orderByTableName(this)"></td>
+            <td><input type="button" value="按照表名排序"  style="color: blue" name="orderButton" onclick="orderByTableName(this)"></td>
+            <td><input type="button" value="清空表格" style="color: blue" name="deleteAll" onclick="emptyTable(this)"></td>
         </tr>
     </table>
         <table width="100%" class="table-7">
         <thead>
+        <th ></th>
         <th >正确顺序</th>
         <th>是否表格标题</th>
         <th >页面字段名</th>
@@ -44,6 +46,10 @@
         <tbody name="table">
         <c:forEach items="${table.elementList}" var="element" varStatus="ele">
         <tr>
+            <td >
+                <input type="button"  style="color: blue" value="删除" name="delete"  onclick="deleteRow(this)"/>
+                <input type="button" style="color: blue"  value="新增" name="add"  onclick="copyRow(this)"/>
+            </td>
             <td ><input type="text" value="${ele.index + 1}" name="ordinalNumber" size="3" onchange="changeOrdinalNumber(this)"></td>
             <td >
                 <select style="width: 50px" name="isTableTitle" onchange="changeTableTag(this)">

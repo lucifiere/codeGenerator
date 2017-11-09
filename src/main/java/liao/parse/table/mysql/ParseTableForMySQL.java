@@ -15,21 +15,25 @@ import java.util.*;
  */
 public class ParseTableForMySQL {
     private static final Properties dbConf = PropertyUtils.getConfig("config");
-    private String tableDefineSQL = "select column_name, column_comment,is_nullable,data_type from information_schema.columns where table_schema ='test' and table_name = '#tableName#';";
+    private String tableColumnSQL = "select column_name, column_comment,is_nullable,data_type from information_schema.columns where table_schema ='test' and table_name = '#tableName#';";
+    private String tableDefineSQL = "SELECT TABLE_COMMENT as table_comment FROM information_schema.`TABLES` WHERE table_schema = 'test' AND table_name = '#tableName#'";
     private Connection conn;
     private Table table;
     public ParseTableForMySQL(String tableName){
         table = new Table(tableName);
     }
     public Table getTable(){
+        tableColumnSQL = tableColumnSQL.replace("#tableName#",table.getTableName());
         tableDefineSQL = tableDefineSQL.replace("#tableName#",table.getTableName());
         try {
             conn = getConnection();
             Statement stat = getStatement(conn);
-            ResultSet rs = stat.executeQuery(tableDefineSQL);
+            ResultSet rs = stat.executeQuery(tableColumnSQL);
             List<Column> columnList = convertToColumnList(rs,table.getTableName());
+            ResultSet rs1 = stat.executeQuery(tableDefineSQL);
+            table.setComment(getTableComment(rs1));
             table.setColumnList(columnList);
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw new RuntimeException(e);
         }finally {
             try {
@@ -39,6 +43,12 @@ public class ParseTableForMySQL {
             }
         }
         return table;
+    }
+    public String getTableComment(ResultSet rs) throws SQLException {
+        while(rs.next()){
+            return rs.getString("table_comment") == null ? "" :  rs.getString("table_comment");
+        }
+        return "";
     }
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");

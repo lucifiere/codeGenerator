@@ -1,26 +1,28 @@
 package liao.code.generator.page.util;
 
+import liao.code.generator.page.enums.ScoreEnum;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.TwoTuple;
 
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
  * Created by ao on 2017/10/17.
  */
-public class ColNameSearchUtils {
+public class ColNameSearchTools {
     private String ignoreChar;
     private static final int minLength = 3;
-    public TwoTuple<Table,Column> getMatchCol(List<Table> tableList,String eleName){
+    public Column getMatchCol(List<Table> tableList,String eleName){
         TreeSet<Result> tree = new TreeSet<>();
         for(int i = 0;i < tableList.size(); i++){
             Table table = tableList.get(i);
             ifNotNullAddTree(getMatchCol(table,eleName,i),tree);
         }
         Result result = notEmptyGetFirst(tree);
-        return result == null ? null : new TwoTuple<Table,Column>(result.table,result.column);
+        return result == null ? null : result.column;
     }
     public Result getMatchCol(Table table,String eleName,int i){
         Result matchCol = pageMatchDB(table,eleName,i);
@@ -135,6 +137,55 @@ public class ColNameSearchUtils {
      */
     private String findNamePre(){
         return  "";
+    }
+
+    /**
+     * 根据上下文进行匹配
+     * @return
+     */
+    public Column contextMatch(List<Table> tableList,String eleName,String title){
+        TreeMap<Integer, Result> map = new TreeMap<>();
+        for(int index = 0;index < tableList.size(); index++){
+            Table table = tableList.get(index);
+            String[] comments = table.getComment().split("-");
+            int score = getScore(comments, title, eleName);
+            TreeSet<Result> tree = new TreeSet<>();
+
+            ifNotNullAddTree(map.get(score),tree);//同分时筛选
+
+            ifNotNullAddTree(getMatchCol(table, eleName, index), tree);//完全匹配
+
+            for (String comment : comments) {
+                ifNotNullAddTree(getMatchCol(table, eleName.replace(comment, ""), index), tree);//移除前最匹配
+            }
+
+            Result rs = notEmptyGetFirst(tree);
+            if(rs != null) {
+                map.put(score,rs);
+            }
+        }
+        return map.firstEntry() == null ? null : map.firstEntry().getValue().column;
+    }
+    private int getScore(String[] comments,String title,String eleName){
+        int score = 0;
+        String who = comments[1];
+        String what = comments[0];
+        if(comments.length > 1){
+            if(title.contains(who)){
+                score += ScoreEnum.TITLE_WHO.getScore();
+            }
+            if(title.contains(what)){
+                score += ScoreEnum.ELE_WHO.getScore();
+            }
+        }
+        if(title.contains(what)){
+            score += ScoreEnum.TITLE_WHAT.getScore();
+        }
+        if(eleName.contains(what)){
+            score += ScoreEnum.ELE_WHAT.getScore();
+        }
+
+        return score;
     }
 
     private static class Result implements Comparable<Result>{

@@ -1,9 +1,5 @@
 
-import com.uc.ucmams.common.dao.UCIbatisDaoImpl;
-
 import java.util.List;
-
-import org.springframework.stereotype.Repository;
 
 public interface #className#Dao{
     List<#className#> get#className#ListForPage(#className#Vo #alias#);

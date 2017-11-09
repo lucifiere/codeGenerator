@@ -11,6 +11,7 @@ public class Table {
     private String tableName;
     private String className;
     private String alias;
+    private String comment;
     private List<Column> columnList;
 
     public Table(){
@@ -53,5 +54,13 @@ public class Table {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

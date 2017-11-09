@@ -4,12 +4,11 @@ import liao.code.generator.page.enums.InputTypeEnum;
 import liao.code.generator.page.enums.ValueTypeEnum;
 import liao.code.generator.page.model.Element;
 import liao.code.generator.page.model.Page;
-import liao.code.generator.page.util.ColNameSearchUtils;
+import liao.code.generator.page.util.ColNameSearchTools;
 import liao.code.generator.page.util.ParseHtml;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
-import liao.utils.TwoTuple;
 import liao.utils.enums.WhetherEnum;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,20 +92,30 @@ public class ConfController {
         Page page = ParseHtml.getAllElement(path);
         List<Element> elementList = page.getPageTableList().get(0).getElementList();
         for(Element element : elementList){
-            TwoTuple<Table,Column> twoTuple  = new ColNameSearchUtils().getMatchCol(tableList,element.getEleName());
-            if(twoTuple != null){
-                Column col = twoTuple.getValue();
-                Table table = twoTuple.getKey();
-                element.setColName(col.getCamelColName());
-                element.setDbColName(col.getColName());
-                element.setDbComment(col.getComment());
-                element.setBeanName(table.getAlias());
-                element.setDbTable(table.getTableName());
-                element.setIsNullable(col.isNullable());
-                element.setTypeLimit(getValueTypeEnum(col.getColJavaType()));
-            }
+            Column col  = new ColNameSearchTools().getMatchCol(tableList,element.getEleName());
+            fillElementByCol(col,tableList,element);
         }
         return page;
+    }
+    private void fillElementByCol(Column col,List<Table> tableList,Element element){
+        if(col != null){
+            Table table = getTableByName(tableList,col.getTableName());
+            element.setColName(col.getCamelColName());
+            element.setDbColName(col.getColName());
+            element.setDbComment(col.getComment());
+            element.setBeanName(table.getAlias());
+            element.setDbTable(table.getTableName());
+            element.setIsNullable(col.isNullable());
+            element.setTypeLimit(getValueTypeEnum(col.getColJavaType()));
+        }
+    }
+    private Table getTableByName(List<Table> tableList,String tableName){
+        for(Table table : tableList){
+            if(table.getTableName().equals(tableName)){
+                return table;
+            }
+        }
+        return null;
     }
 
     private Integer getValueTypeEnum(String javaType){
@@ -146,6 +155,19 @@ public class ConfController {
         element.setIsNullable(col.isNullable());
         element.setTypeLimit(getValueTypeEnum(col.getColJavaType()));
         return element;
+    }
+
+    @RequestMapping("changeEleName")
+    @ResponseBody
+    public Element changeEleName(Element ele,String tableNames,String title){
+        List<Table> tableList = tableCache.get(tableNames);
+        if(tableList == null){
+            tableList = getTableList(tableNames);
+            tableCache.put(tableNames,tableList);
+        }
+        Column column =  new ColNameSearchTools().contextMatch(tableList,ele.getEleName(),title);
+        fillElementByCol(column,tableList,ele);
+        return ele;
     }
 
 
