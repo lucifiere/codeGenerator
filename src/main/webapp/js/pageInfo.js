@@ -9,14 +9,14 @@ function changeOrdinalNumber(obj){
     ordinalNumberList = removeArrayElement(oldValue-1,ordinalNumberList);
     ordinalNumberList = addArrayElement(newValue-1,obj,ordinalNumberList);
     var colNum = ordinalNumberList.length;
-    for(var i = 0;i < colNum;i++){
-        ordinalNumberList[i].value = i + 1;
-        var row = ordinalNumberList[i].parentNode.parentNode;
-        addRow(row,table);
+    for(var i = 0;i < ordinalNumberList.length;i++){
+        addRowAndValue(ordinalNumberList[i]);
     }
     for(var i = 0;i < colNum;i++){
         table.deleteRow(0);
     }
+    updateOrderNum(getObjIndex(table,"table"));
+
 }
 function removeArrayElement(index,array){
     var newArray = new Array(array.length-1);
@@ -180,37 +180,6 @@ function getFirstNotNullTableName(start,startIndex,endIndex){
 
 
 
-function  changDBColName(obj) {
-    var index = getTableIndex(obj,obj.name);
-    var colName = ifBlankReturnNull(obj.value);
-    if(colName == null){
-        return;
-    }
-    $.ajax({
-        type: "post",
-        url: basePath+"/conf/changeDBColName.do",
-        data: {tableNames: document.getElementById("tableName").value,dbColName:colName},
-        dataType: "json",
-        async: false,
-        error: function () {
-            alert("查询失败");
-        },
-        success: function (data) {
-            if(data.length == 0){
-                return;
-            }
-            var element = data[0];
-            document.getElementsByName("dbTable")[index].value = element.dbTable;
-            document.getElementsByName("dbColName")[index].value = element.dbColName;
-            document.getElementsByName("dbComment")[index].value = element.dbComment;
-            document.getElementsByName("beanName")[index].value = element.beanName;
-            document.getElementsByName("inputType")[index].value = element.inputType;
-            document.getElementsByName("isNullable")[index].value = element.isNullable;
-            document.getElementsByName("lengthLimit")[index].value = element.lengthLimit;
-            document.getElementsByName("typeLimit")[index].value = element.typeLimit;
-        }
-    });
-}
 
 function getColList(obj) {
     var index = getTableIndex(obj,obj.name);
@@ -218,7 +187,7 @@ function getColList(obj) {
     $.ajax({
         type: "post",
         url: basePath+"/conf/allElementList.do",
-        data: {tableNames: document.getElementById("tableName").value,tableName:tableName},
+        data: {title:"",tableNames: document.getElementById("tableName").value,tableName:tableName},
         dataType: "json",
         async: false,
         error: function () {

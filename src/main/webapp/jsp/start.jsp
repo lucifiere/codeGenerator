@@ -15,6 +15,8 @@
     <script src="${basePath}/js/jquery/jquery-3.1.1.min.js"></script>
     <script src="${basePath}/js/common.js"></script>
     <script src="${basePath}/js/pageInfo.js"></script>
+    <script src="${basePath}/js/search.js"></script>
+
 <%--
     <script src="${basePath}/js/plugin/search/search.js"></script>
 --%>

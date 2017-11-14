@@ -60,10 +60,21 @@
                 </select>
             </td>
             <td ><input type="text" value="${element.eleName}" name="eleName" size="14"></td>
-            <td><input type="text" value="${element.dbTable}" name="dbTable" size="20"></td>
-            <td><input type="text" value="${element.dbColName}" name="dbColName" size="14" onchange="changDBColName(this)"></td>
-            <td  ><input type="text" value="${element.dbComment}" name="dbComment" size="14" disabled></td>
-            <td ><input type="text" value="${element.beanName}" name="beanName" size="14"></td>
+            <td>
+                <input type="text" value="${element.dbTable}" name="dbTable" size="20">
+                <div name="dbTableDiv"></div>
+            </td>
+            <td>
+                <input type="text" value="${element.dbColName}" name="dbColName" size="14" onchange="changDBColName(this)" onfocus="changDBColName(this)" onblur="moveInput(this)">
+                <div name="dbColNameDiv" style="z-index:1"></div>
+            </td>
+            <td  >
+                <input type="text" value="${element.dbComment}" name="dbComment" size="14" disabled>
+                <div name="dbCommentDiv" style="z-index:1"></div>
+            </td>
+            <td >
+                <input type="text" value="${element.beanName}" name="beanName" size="14">
+            </td>
             <td>
                 <select name="inputType">
                     <c:forEach items="${inputTypeList }" var="inputType">

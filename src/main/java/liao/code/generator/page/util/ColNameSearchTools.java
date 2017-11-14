@@ -5,37 +5,34 @@ import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.TwoTuple;
 
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by ao on 2017/10/17.
  */
 public class ColNameSearchTools {
-    private String ignoreChar;
     private static final int minLength = 3;
     public Column getMatchCol(List<Table> tableList,String eleName){
         TreeSet<Result> tree = new TreeSet<>();
         for(int i = 0;i < tableList.size(); i++){
             Table table = tableList.get(i);
-            ifNotNullAddTree(getMatchCol(table,eleName,i),tree);
+            tree.addAll(getMatchCol(table,eleName,i));
         }
         Result result = notEmptyGetFirst(tree);
         return result == null ? null : result.column;
     }
-    public Result getMatchCol(Table table,String eleName,int i){
-        Result matchCol = pageMatchDB(table,eleName,i);
+    public TreeSet<Result> getMatchCol(Table table,String eleName,int i){
+        TreeSet<Result> matchCol = pageMatchDB(table,eleName,i);
         return matchCol;
     }
-    private Result pageMatchDB(Table table,String eleName,int tableIndex){
+    private TreeSet<Result> pageMatchDB(Table table,String eleName,int tableIndex){
 
         TreeSet<Result> tree = new TreeSet<Result>();
-        ifNotNullAddTree(orderMatch(table,eleName,tableIndex),tree);
-        ifNotNullAddTree(reverseMatch(table, eleName, tableIndex),tree);
-        ifNotNullAddTree(middleMatch(table, eleName, tableIndex),tree);
-        ifNotNullAddTree(wordByWordMatch(table,eleName, tableIndex), tree);
-        return notEmptyGetFirst(tree);
+        tree.addAll(orderMatch(table,eleName,tableIndex));
+        tree.addAll(reverseMatch(table, eleName, tableIndex));
+        tree.addAll(middleMatch(table, eleName, tableIndex));
+        tree.addAll(wordByWordMatch(table,eleName, tableIndex));
+        return tree;
     }
     private void ifNotNullAddTree(Result result,TreeSet<Result> tree){
         if(result != null) {
@@ -43,10 +40,10 @@ public class ColNameSearchTools {
         }
     }
     private Result notEmptyGetFirst(TreeSet<Result> tree){
-        return tree.isEmpty() ? null : tree.first();
+        return tree == null || tree.isEmpty() ? null : tree.first();
     }
 
-    private Result orderMatch(Table table,String eleName,int tableIndex){
+    private TreeSet<Result> orderMatch(Table table,String eleName,int tableIndex){
         List<Column> columnList = table.getColumnList();
         TreeSet<Result> matchColSet = new TreeSet<>();
         int minLen = minLength > eleName.length() ? eleName.length() : minLength;
@@ -67,32 +64,30 @@ public class ColNameSearchTools {
                 break;
             }
         }
-        return notEmptyGetFirst(matchColSet);
+        return matchColSet;
     }
 
-    public Result middleMatch(Table table,String eleName,int tableIndex){
+    public TreeSet<Result> middleMatch(Table table,String eleName,int tableIndex){
         TreeSet<Result> matchColSet = new TreeSet<>();
         int minLen = minLength > eleName.length() ? eleName.length() : minLength;
-        int startIndex = 1;
         int endIndex = 1;
-        for(;;){
-            String matchStr = eleName.substring(startIndex,eleName.length() - endIndex);
-            if(matchStr.length() < minLen){
-                break;
-            }
-            TreeSet<Result> matchCol = strMatchColName(matchStr,eleName,table,tableIndex,3);
-            matchColSet.addAll(matchCol);
-            if(!matchCol.isEmpty()){
-                break;
-            }
-            //先从后往前缩减
-            if(startIndex < endIndex){
+        for (int startIndex = 2; startIndex < eleName.length() - minLen; ) {
+            String matchStr = eleName.substring(startIndex, eleName.length() - endIndex);
+            endIndex++;
+            if (matchStr.length() < minLen) {
+                endIndex = 1;
                 startIndex++;
-            }else{
-                endIndex++;
+                continue;
             }
+            TreeSet<Result> matchCol = strMatchColName(matchStr, eleName, table, tableIndex, 3);
+            matchColSet.addAll(matchCol);
+            if (!matchCol.isEmpty()) {
+                break;
+            }
+
+
         }
-        return notEmptyGetFirst(matchColSet);
+        return matchColSet;
     }
     private TreeSet<Result> strMatchColName(String matchStr,String eleName,Table table,int tableIndex,int type){
         TreeSet<Result> matchColSet = new TreeSet<>();
@@ -105,7 +100,7 @@ public class ColNameSearchTools {
         }
         return matchColSet;
     }
-    private Result reverseMatch(Table table,String eleName,int tableIndex){
+    private TreeSet<Result> reverseMatch(Table table,String eleName,int tableIndex){
         List<Column> columnList = table.getColumnList();
         TreeSet<Result> matchColSet = new TreeSet<>();
         int minLen =minLength > eleName.length() ? 1 : eleName.length() - minLength+1;
@@ -126,13 +121,13 @@ public class ColNameSearchTools {
                 break;
             }
         }
-        return notEmptyGetFirst(matchColSet);
+        return matchColSet;
     }
     private Column dbMatchPage(List<Column> columnList,String eleName){
         return null;
     }
 
-    private Result wordByWordMatch(Table table,String eleName,int index){
+    private TreeSet<Result> wordByWordMatch(Table table,String eleName,int index){
         if(eleName.length() < 2){
             return null;
         }
@@ -148,7 +143,7 @@ public class ColNameSearchTools {
                 //减1是为了降低优先级
                 matchColSet.add(new Result(matchCount-1, 3, col, table, true, Math.abs(eleName.length() - col.getComment().length()), index));
         }
-        return notEmptyGetFirst(matchColSet);
+        return matchColSet;
     }
 
     /**
@@ -163,36 +158,37 @@ public class ColNameSearchTools {
      * 根据上下文进行匹配
      * @return
      */
-    public Column contextMatch(List<Table> tableList,String eleName,String title){
-        TreeMap<Integer, Result> map = new TreeMap<>();
+    public List<Column> contextMatch(List<Table> tableList,String eleName,String title){
+        TreeMap<Integer, TreeSet<Result>> map = new TreeMap<>();
         for(int index = 0;index < tableList.size(); index++){
             Table table = tableList.get(index);
             String[] comments = table.getComment().split("-");
             int score = getScore(comments, title, eleName);
             TreeSet<Result> tree = new TreeSet<>();
+            if(map.get(score) != null) {
+                tree.addAll(map.get(score));//同分时筛选
+            }
 
-            ifNotNullAddTree(map.get(score),tree);//同分时筛选
-
-            ifNotNullAddTree(getMatchCol(table, eleName, index), tree);//完全匹配
+            tree.addAll(getMatchCol(table, eleName, index));//完全匹配
 
             for (String comment : comments) {
-                Result result = getMatchCol(table, eleName.replace(comment, ""), index);
+               /* Result result = getMatchCol(table, eleName.replace(comment, ""), index);
                 if(result != null)
-                    result.matchLength += comment.length();
-                ifNotNullAddTree(result, tree);//移除前最匹配
-                result = wordByWordMatch(table,eleName.replace(comment, ""), index);
-                if(result != null)
-                    result.matchLength += comment.length();
-                ifNotNullAddTree(result, tree);
+                    result.matchLength += comment.length();*/
+                tree.addAll(getMatchCol(table, eleName.replace(comment, ""), index));//移除前最匹配
+                tree.addAll(wordByWordMatch(table,eleName.replace(comment, ""), index));
             }
-
-            Result rs = notEmptyGetFirst(tree);
-            if(rs != null) {
-                map.put(score,rs);
+            map.put(score,tree);
+        }
+        LinkedList<Column> columnList = new LinkedList<>();
+        for(Map.Entry<Integer,TreeSet<Result>> entry : map.entrySet()){
+            for(Result r : entry.getValue()){
+                columnList.add(r.column);
             }
         }
-        return map.firstEntry() == null ? null : map.firstEntry().getValue().column;
+        return columnList;
     }
+
     private int getScore(String[] comments,String title,String eleName){
         int score = 0;
         String who = comments[1];

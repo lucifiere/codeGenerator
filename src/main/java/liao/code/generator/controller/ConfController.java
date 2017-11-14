@@ -6,6 +6,7 @@ import liao.code.generator.page.model.Element;
 import liao.code.generator.page.model.Page;
 import liao.code.generator.page.util.ColNameSearchTools;
 import liao.code.generator.page.util.ParseHtml;
+import liao.code.generator.page.util.ParseTxtForPage;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.parse.table.mysql.ParseTableForMySQL;
@@ -85,15 +86,23 @@ public class ConfController {
                 }
             }
         }
+
         return allColumn;
     }
 
     private Page createPageInfo(String path,List<Table> tableList){
-        Page page = ParseHtml.getAllElement(path);
+        Page page = null;
+        if(path.endsWith(".html")) {
+            page = ParseHtml.getAllElement(path);
+        }else{
+            page = ParseTxtForPage.getAllElement(path);
+        }
         List<Element> elementList = page.getPageTableList().get(0).getElementList();
         for(Element element : elementList){
-            Column col  = new ColNameSearchTools().contextMatch(tableList,element.getEleName(),"");
-            fillElementByCol(col,tableList,element);
+            List<Column> columnList  = new ColNameSearchTools().contextMatch(tableList,element.getEleName(),"");
+            if(!columnList.isEmpty()) {
+                fillElementByCol(columnList.get(0), tableList, element);
+            }
         }
         return page;
     }
@@ -129,18 +138,20 @@ public class ConfController {
     }
     @RequestMapping("changeDBColName")
     @ResponseBody
-    public List<Element> changeDBColName(String dbColName,String tableNames){
+    public List<Element> changeDBColName(String dbColName,String tableNames,String eleName,String title){
         List<Table> tableList = tableCache.get(tableNames);
         if(tableList == null){
             tableList = getTableList(tableNames);
             tableCache.put(tableNames,tableList);
         }
         List<Element> resultList = new ArrayList<>();
-        for(Table table : tableList){
-            for(Column col : table.getColumnList()){
-                if(col.getColName().equals(dbColName)){
-                    resultList.add(createElementByCol(table,col));
-                }
+        for(Table table : tableList)
+        for(Column col : table.getColumnList()){
+            if((dbColName == null && dbColName.trim().length() == 0) || col.getColName().equals(dbColName)){
+                Element newEle = new Element();
+                newEle.setEleName(eleName);
+                fillElementByCol(col, tableList, newEle);
+                resultList.add(newEle);
             }
         }
         return resultList;
@@ -159,15 +170,20 @@ public class ConfController {
 
     @RequestMapping("changeEleName")
     @ResponseBody
-    public Element changeEleName(Element ele,String tableNames,String title){
+    public List<Element> changeEleName(String eleName,String tableNames,String title){
         List<Table> tableList = tableCache.get(tableNames);
         if(tableList == null){
             tableList = getTableList(tableNames);
             tableCache.put(tableNames,tableList);
         }
-        Column column =  new ColNameSearchTools().contextMatch(tableList,ele.getEleName(),title);
-        fillElementByCol(column,tableList,ele);
-        return ele;
+        List<Column> columnList =  new ColNameSearchTools().contextMatch(tableList,eleName,title);
+        List<Element> resultList = new ArrayList<>(columnList.size());
+        for(Column column : columnList) {
+            Element newEle = new Element();
+            newEle.setEleName(eleName);
+            fillElementByCol(column, tableList, newEle);
+        }
+        return resultList;
     }
 
 

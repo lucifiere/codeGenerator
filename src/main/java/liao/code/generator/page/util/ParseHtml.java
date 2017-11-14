@@ -159,7 +159,7 @@ public class ParseHtml {
             name = name.replaceAll(HANZI_BEFORE,"");
             name = name.replaceAll(HANZI_AFTER,"");
             name = name.trim();
-            if(!type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(name)) {
+            if(type != null && !type.toLowerCase().matches(IGNORE_TYPE) && !SPECIAL_CHAR.contains(name)) {
                 String[] names = name.split(SPLIT);
                 for(int i = 0;i < names.length;i++) {
                     String n = names[i];

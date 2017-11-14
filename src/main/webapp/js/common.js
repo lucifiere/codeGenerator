@@ -1,6 +1,34 @@
 /**
  * Created by ao on 2017/10/31.
  */
+function copyRowValue(inedx,newIndex){
+    document.getElementsByName("eleName")[newIndex].value = document.getElementsByName("eleName")[inedx].value;
+    document.getElementsByName("dbTable")[newIndex].value = document.getElementsByName("dbTable")[inedx].value ;
+    document.getElementsByName("dbColName")[newIndex].value = document.getElementsByName("dbColName")[inedx].value;
+    document.getElementsByName("dbComment")[newIndex].value = document.getElementsByName("dbComment")[inedx].value;
+    document.getElementsByName("beanName")[newIndex].value = document.getElementsByName("beanName")[inedx].value;
+    document.getElementsByName("inputType")[newIndex].value = document.getElementsByName("inputType")[inedx].value;
+    document.getElementsByName("isNullable")[newIndex].value = document.getElementsByName("isNullable")[inedx].value;
+    document.getElementsByName("lengthLimit")[newIndex].value = document.getElementsByName("lengthLimit")[inedx].value;
+    document.getElementsByName("typeLimit")[newIndex].value = document.getElementsByName("typeLimit")[inedx].value;
+
+}
+function addRowAndValue(button){
+    var table = button.parentNode.parentNode.parentNode;
+    var buttonRow = button.parentNode.parentNode;
+    var row = table.insertRow();
+    for(var i = 0;i < buttonRow.cells.length;i++){
+        var cell = row.insertCell(i);
+        cell.class =  buttonRow.cells[i].class;
+        cell.align = buttonRow.cells[i].align;
+        cell.bgColor = buttonRow.cells[i].bgColor;
+        cell.innerHTML = buttonRow.cells[i].innerHTML;
+    }
+    var objIndex = getObjIndex(button,button.name);
+    var newIndex = getRowCount(getObjIndex(table,"table"))-1;
+    copyRowValue(objIndex,newIndex);
+    updateOrderNum(getObjIndex(table,"table"));
+}
 function copyRow(button) {
     var table = button.parentNode.parentNode.parentNode;
     var buttonRow = button.parentNode.parentNode;
