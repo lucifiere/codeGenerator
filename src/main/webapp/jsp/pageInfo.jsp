@@ -59,13 +59,13 @@
                     </c:forEach>
                 </select>
             </td>
-            <td ><input type="text" value="${element.eleName}" name="eleName" size="14" oninput="changEleName(this)" onclick="changEleName(this)" onfocus="changEleName(this)" onblur="displayNoneByObj(this)" onkeyup="moveSelect()" onkeydown="enterConfirmValue(${ele.index},this)"></td>
+            <td ><input type="text" value="${element.eleName}" name="eleName" size="14" oninput="changEleName(this)" onclick="changEleName(this)" onfocus="changEleName(this)" onblur="displayNoneByObj(this)" onkeyup="moveSelect()" onkeydown="enterConfirmValue(this)"></td>
             <td>
                 <input type="text" value="${element.dbTable}" name="dbTable" size="20">
                 <div name="dbTableDiv"></div>
             </td>
             <td>
-                <input type="text" value="${element.dbColName}" name="dbColName" size="14" oninput="changDBColName(this)" onclick="changEleName(this)" onfocus="changDBColName(this)" onblur="displayNoneByObj(this)" onkeyup="moveSelect()" onkeydown="enterConfirmValue(this)">
+                <input type="text" value="${element.dbColName}" name="dbColName" size="14" oninput="changDBColName(this)" onclick="changDBColName(this)" onfocus="changDBColName(this)" onblur="displayNoneByObj(this)" onkeyup="moveSelect()" onkeydown="enterConfirmValue(this)">
                 <div name="dbColNameDiv"></div>
             </td>
             <td  >

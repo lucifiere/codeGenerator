@@ -9,14 +9,10 @@ function  changDBColName(obj) {
     if(colName == null || colName.trim().length==0){
         return ;
     }
-    var eleName = document.getElementsByName("eleName")[index].value;
-    if(eleName == null || eleName.trim().length==0){
-        return ;
-    }
     $.ajax({
         type: "post",
         url: basePath+"/conf/changeDBColName.do",
-        data: {title:"",tableNames: document.getElementById("tableName").value,dbColName:colName,"eleName":eleName},
+        data: {title:"",tableNames: document.getElementById("tableName").value,dbColName:colName},
         dataType: "json",
         async: false,
         error: function () {
@@ -118,6 +114,8 @@ function displayNone(divIndex){
     document.getElementsByName("dbTableDiv")[divIndex].style.display = "none";
     document.getElementsByName("dbColNameDiv")[divIndex].style.display = "none";
     document.getElementsByName("dbCommentDiv")[divIndex].style.display = "none";
+    olaValue = null;
+    eleInfoList = null;
 }
 function setValue(liIndex,eleIndex){
     var data = eleInfoList[liIndex];
