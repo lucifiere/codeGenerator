@@ -1,6 +1,7 @@
 /**
  * Created by ao on 2017/11/10.
  */
+var eleInfoList = null;
 function  changDBColName(obj) {
     var index = getTableIndex(obj,obj.name);
     var colName = ifBlankReturnNull(obj.value);
@@ -21,17 +22,42 @@ function  changDBColName(obj) {
             alert("查询失败");
         },
         success: function (data) {
-            display(obj,data,"dbColNameDiv");
-            display(obj,data,"dbCommentDiv");
-            display(obj,data,"dbTableDiv");
+            eleInfoList = data;
+            //setValue(0,getObjIndex(obj,obj.name));
+            display(obj,data,"dbColNameDiv","dbColName");
+            display(obj,data,"dbCommentDiv","dbComment");
+            display(obj,data,"dbTableDiv","dbTable");
         }
     });
 }
-
-function display(obj,dataList,divName){
+function  changEleName(obj) {
+    var index = getTableIndex(obj,obj.name);
+    var eleName = document.getElementsByName("eleName")[index].value;
+    if(eleName == null || eleName.trim().length==0){
+        return ;
+    }
+    $.ajax({
+        type: "post",
+        url: basePath+"/conf/changeEleName.do",
+        data: {title:"",tableNames: document.getElementById("tableName").value,"eleName":eleName},
+        dataType: "json",
+        async: false,
+        error: function () {
+            alert("查询失败");
+        },
+        success: function (data) {
+            eleInfoList = data;
+            //setValue(0,getObjIndex(obj,obj.name));
+            display(obj,data,"dbColNameDiv","dbColName");
+            display(obj,data,"dbCommentDiv","dbComment");
+            display(obj,data,"dbTableDiv","dbTable");
+        }
+    });
+}
+function display(obj,dataList,divName,eleName){
     var html = "<ul>";
     for(var i = 0;i < dataList.length;i++){
-        html += createOneRow(divName,obj,eleNameList,dataList[i]);
+        html += createOneRow(divName,obj,dataList[i],eleName);
     }
     html +="</ul>";
     var index = getObjIndex(obj,obj.name);
@@ -39,45 +65,57 @@ function display(obj,dataList,divName){
     document.getElementsByName(divName)[index].innerHTML=html;
     document.getElementsByName(divName)[index].style.display="";
 }
-function createOneRow(divName,obj,data){
-    return '<li width="'+obj.width+'" '
-        + 'name="'+obj.name+'li"'
-        + 'onclick="setValue('+obj+','+obj+','+divName+')" '
-        + ' onMouseOver="selected('+obj+','+data+','+this+')" '
-        + ' onMouseOut="noSelect('+obj+','+data+','+this+')"'
+function createOneRow(divName,obj,data,eleName){
+    var index = getObjIndex(obj,obj.name);
+    return '<li '
+        + 'name="'+eleName+'Li"'
+        + 'onclick="confirmValue('+index+',this)" '
+        + ' onmouseover="selected('+index+',this)" '
+        + ' onmouseout="noSelect('+index+',this)"'
         + '>'
-        + obj[eleName]
+        + data[eleName]
         + '</li>';
 }
-function setValue(obj,data,divName){
-    var index = getObjIndex(obj);
-    document.getElementsByName("dbTable")[index].value = data.dbTable;
-    document.getElementsByName("dbColName")[index].value = data.dbColName;
-    document.getElementsByName("dbComment")[index].value = data.dbComment;
-    document.getElementsByName("beanName")[index].value = data.beanName;
-    document.getElementsByName("inputType")[index].value = data.inputType;
-    document.getElementsByName("isNullable")[index].value = data.isNullable;
-    document.getElementsByName("lengthLimit")[index].value = data.lengthLimit;
-    document.getElementsByName("typeLimit")[index].value = data.typeLimit;
-    document.getElementsByName("divName")[index].style.display="none";
+function confirmValue(eleIndex,obj){
+    var index = getObjIndex(obj,obj.attributes.name.value);
+    setValue(index,eleIndex);
+    var div = obj.parentNode.parentNode;
+    var divIndex = getObjIndex(div,div.attributes.name.value);
+    displayNone(divIndex);
 }
-function selected(obj,li,data){
-    var index = getObjIndex(li,li.name);
-    var liCount = document.getElementsByName("dbTableLi").length;
-    for(var i = 0;i < liCount;i++){
-        document.getElementsByName("dbTableLi")[index].style.color = "white";
-        document.getElementsByName("dbColNameLi")[index].style.color = "white";
-        document.getElementsByName("dbCommentLi")[index].style.color = "white";
-    }
-    document.getElementsByName("dbTableLi")[index].style.color = "gray";
-    document.getElementsByName("dbColNameLi")[index].style.color = "gray";
-    document.getElementsByName("dbCommentLi")[index].style.color = "gray";
+function displayNone(divIndex){
+    document.getElementsByName("dbTableDiv")[divIndex].innerHTML = "";
+    document.getElementsByName("dbColNameDiv")[divIndex].innerHTML = "";
+    document.getElementsByName("dbCommentDiv")[divIndex].innerHTML = "";
+    document.getElementsByName("dbTableDiv")[divIndex].style.display = "none";
+    document.getElementsByName("dbColNameDiv")[divIndex].style.display = "none";
+    document.getElementsByName("dbCommentDiv")[divIndex].style.display = "none";
 }
-function selected(obj,li,data){
-    selected(obj,li,data);
+function setValue(liIndex,eleIndex){
+    var data = eleInfoList[liIndex];
+    document.getElementsByName("dbTable")[eleIndex].value = data.dbTable;
+    document.getElementsByName("dbColName")[eleIndex].value = data.dbColName;
+    document.getElementsByName("dbComment")[eleIndex].value = data.dbComment;
+    document.getElementsByName("beanName")[eleIndex].value = data.beanName;
+    document.getElementsByName("inputType")[eleIndex].value = data.inputType;
+    document.getElementsByName("isNullable")[eleIndex].value = data.isNullable;
+    document.getElementsByName("lengthLimit")[eleIndex].value = data.lengthLimit;
+    document.getElementsByName("typeLimit")[eleIndex].value = data.typeLimit;
 }
-function noSelect(obj,li,data){
-
+function selected(eleIndex,obj){
+    var index = getObjIndex(obj,obj.attributes.name.value);
+    var data = eleInfoList[index];
+    document.getElementsByName("dbTableLi")[index].style.backgroundColor = "gray";
+    document.getElementsByName("dbColNameLi")[index].style.backgroundColor = "gray";
+    document.getElementsByName("dbCommentLi")[index].style.backgroundColor = "gray";
+    setValue(index,eleIndex);
+}
+function noSelect(eleIndex,obj){
+    var index = getObjIndex(obj,obj.attributes.name.value);
+    document.getElementsByName("dbTableLi")[index].style.backgroundColor = "";
+    document.getElementsByName("dbColNameLi")[index].style.backgroundColor = "";
+    document.getElementsByName("dbCommentLi")[index].style.backgroundColor = "";
+    setValue(0,eleIndex);
 }
 function moveInput(obj){
     var index = getObjIndex(obj);

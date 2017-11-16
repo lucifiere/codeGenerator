@@ -147,7 +147,7 @@ public class ConfController {
         List<Element> resultList = new ArrayList<>();
         for(Table table : tableList)
         for(Column col : table.getColumnList()){
-            if((dbColName == null && dbColName.trim().length() == 0) || col.getColName().equals(dbColName)){
+            if((dbColName == null && dbColName.trim().length() == 0) || col.getColName().contains(dbColName)){
                 Element newEle = new Element();
                 newEle.setEleName(eleName);
                 fillElementByCol(col, tableList, newEle);
@@ -182,6 +182,7 @@ public class ConfController {
             Element newEle = new Element();
             newEle.setEleName(eleName);
             fillElementByCol(column, tableList, newEle);
+            resultList.add(newEle);
         }
         return resultList;
     }

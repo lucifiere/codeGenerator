@@ -129,7 +129,7 @@ public class ColNameSearchTools {
 
     private TreeSet<Result> wordByWordMatch(Table table,String eleName,int index){
         if(eleName.length() < 2){
-            return null;
+            return new TreeSet<>();
         }
         TreeSet<Result> matchColSet = new TreeSet<>();
         for(Column col : table.getColumnList()) {
@@ -183,7 +183,9 @@ public class ColNameSearchTools {
         LinkedList<Column> columnList = new LinkedList<>();
         for(Map.Entry<Integer,TreeSet<Result>> entry : map.entrySet()){
             for(Result r : entry.getValue()){
-                columnList.add(r.column);
+                if(!columnList.contains(r.column)) {
+                    columnList.add(r.column);
+                }
             }
         }
         return columnList;

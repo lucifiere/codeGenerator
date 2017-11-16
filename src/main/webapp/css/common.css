@@ -209,3 +209,23 @@
     background: linear-gradient(top, #8DC9EF, #4E9FD1);
     background: -ms-linear-gradient(top, #8DC9EF, #4E9FD1);
 }
+
+.mark
+{
+    background-color: Red;
+    position:absolute;
+    width: 10%;
+    height: 10%;
+}
+ul {
+    padding:0;margin:0;
+    border: solid 1px gray;
+}
+li {
+    border-bottom-width: 0px;
+    height: 25px;
+    width: 250px;
+    list-style-type:none;
+    line-height:25px
+}
+
