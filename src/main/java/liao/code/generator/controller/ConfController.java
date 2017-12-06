@@ -187,6 +187,10 @@ public class ConfController {
         return resultList;
     }
 
+    public boolean generatorCode(Page page){
+        return true;
+    }
+
 
 
 }
