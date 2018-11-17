@@ -1,7 +1,10 @@
+package #basePackage#.service;
 
 import java.util.List;
 
-import com.zuche.framework.vo.User;
+import  #basePackage#.model.#className#;
+import  #basePackage#.vo.#className#Vo;
+
 
 
 public interface #className#Service{

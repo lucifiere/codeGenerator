@@ -1,9 +1,5 @@
+package #basePackage#.controller;
 
-import com.uc.ucBase.util.waterfallpage.PageItemsUtil;
-import com.uc.ucBase.util.waterfallpage.jmesa.PageQueryProxy;
-
-import com.zuche.framework.utils.AuthorizationMessageUtil;
-import com.zuche.framework.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +18,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import #basePackage#.service.#className#Service;
+
+
+
 @Controller
 @RequestMapping(value = "/#alias#")
 public class #className#Controller{
@@ -35,22 +35,16 @@ public class #className#Controller{
      @RequestMapping("getList")
      public ModelAndView getList(#className#Vo #alias#Vo, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mv = new ModelAndView(LIST_PAGE);
-        Collection<#className#Vo> items = PageItemsUtil.getItems
-        (#alias#Vo, new PageQueryProxy<#className#Vo, #className#Vo>() {
-            @Override
-            public Collection<#className#Vo> queryList(#className#Vo #alias#Vo) throws Exception {
-                return #alias#Service.get#className#ListForPage(#alias#Vo);
-            }
-
-            @Override
-            public int queryCount(#className#Vo #alias#Vo) throws Exception {
-                return #alias#Service.get#className#Count(#alias#Vo);
-            }
-            }, request, "#alias#List");
-            mv.addObject("items", items);
-            mv.addObject("#alias#Vo", #alias#Vo);
-            this.setEnumInfo(mv, true);
-            return mv;
+        int startNum = (#alias#Vo.getPageNum() == 0 ? 0 : (#alias#Vo.getPageNum() - 1)) * #alias#Vo.getPageSize();
+        #alias#Vo.setStartNum(startNum);
+        Collection<#className#Vo> items = #alias#Service.get#className#ListForPage(#alias#Vo);
+        int count = #alias#Service.get#className#ListCount(#alias#Vo);
+        mv.addObject("items", items);
+        mv.addObject("totalCount", count);
+        mv.addObject("pageCount",count/#alias#Vo.getPageSize()+1;);
+        mv.addObject("#alias#Vo", #alias#Vo);
+        this.setEnumInfo(mv, true);
+        return mv;
      }
      private void setEnumInfo(ModelAndView mv){
 

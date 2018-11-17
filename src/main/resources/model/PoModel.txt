@@ -1,12 +1,12 @@
+package #basePackage#.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.zuche.framework.annotation.IbatisAliasConfig;
-import com.zuche.framework.dao.util.QueryCond;
-
-@IbatisAliasConfig(alias="#alias#")
+/**
+ * #tableComment#
+ */
 public class #className# extends QueryCond implements Serializable {
 #content#
 }

@@ -1,12 +1,11 @@
-
-import com.fcar.common.CarMysqlIbatisDaoImpl;
+package #basePackage#.dao.impl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class #className#DaoImpl extends CarMysqlIbatisDaoImpl implements #className#Dao{
+public class #className#DaoImpl implements #className#Dao{
     public List<#className#Vo> get#className#ListForPage(#className#Vo #alias#){
         return this.executeQueryForMultiLimit("#alias#.get#className#ListForPage", #alias#, #className#Vo.class);
     }

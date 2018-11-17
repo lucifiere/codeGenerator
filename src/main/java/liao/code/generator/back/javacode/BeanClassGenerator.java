@@ -4,6 +4,7 @@ import liao.code.generator.back.factory.Factory;
 import liao.parse.table.model.Column;
 import liao.parse.table.model.Table;
 import liao.utils.NameUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by ao on 2017/10/12.
  */
+@Component
 public class BeanClassGenerator extends AbstractClassGenerator {
     private static final String CONFIG_FILE = "PoModel";
     protected String createCode(Table table){

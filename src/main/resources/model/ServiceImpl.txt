@@ -1,10 +1,13 @@
-
+package #basePackage#.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zuche.framework.vo.User;
+import #basePackage#.model.#className#;
+import #basePackage#.vo.#className#Vo;
+import #basePackage#.dao.#className#Dao;
+import #basePackage#.service.#className#Service;
 
 
 @Service

@@ -1,5 +1,9 @@
+package #basePackage#.dao;
 
 import java.util.List;
+import  #basePackage#.model.#className#;
+import  #basePackage#.vo.#className#Vo;
+
 
 public interface #className#Dao{
     List<#className#> get#className#ListForPage(#className#Vo #alias#);

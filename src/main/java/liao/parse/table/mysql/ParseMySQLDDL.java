@@ -18,6 +18,7 @@ public class ParseMySQLDDL {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         List<String> ddlSql = new ArrayList<String>();
+        List<Table> tableList = new ArrayList<>();
         while (sc.hasNext()){
             String line = sc.nextLine().trim();
             if(line.isEmpty()){//空行忽略
@@ -25,13 +26,19 @@ public class ParseMySQLDDL {
             }
             ddlSql.add(line);
             if(line.substring(0,1).equals(")")){//最后一行
+                tableList.add(parseDDLSQL(ddlSql));
+                ddlSql = new ArrayList<String>();
+            }
+            if(line.trim().equals("the end")){
                 break;
             }
+
         }
-        Table table = parseDDLSQL(ddlSql);
         List<AbstractCodeGenerator> generatorList = RegistrationFactory.getGeneratorList();
-        for(AbstractCodeGenerator classGenerator : generatorList){
-            classGenerator.generatorCode(table);
+        for(Table table : tableList) {
+            for (AbstractCodeGenerator classGenerator : generatorList) {
+                classGenerator.generatorCode(table);
+            }
         }
     }
     public static Table parseDDLSQL(List<String> sqlList){
@@ -42,6 +49,11 @@ public class ParseMySQLDDL {
         for(String oneLine : sqlList){
             if(oneLine.substring(0,1).equals("`")){//是字段定义sql
                 columnList.add(getOneColumn(oneLine,tableName));
+            }
+            if(oneLine.substring(0,1).equals(")")){
+                String comment = getComment(oneLine);
+                comment = comment.replaceAll("表$","");
+                table.setComment(comment);
             }
         }
         return table;
@@ -62,6 +74,17 @@ public class ParseMySQLDDL {
         col.setComment(colComment);
         col.setTableName(tableName);
         return col;
+    }
+
+    private static String getComment(String line){
+        line = line.replaceAll("`|'|,|;","");
+        String[] eles = line.split(" ");
+        for(int i = 0;i < eles.length; i++) {
+            if(eles[i].toLowerCase().startsWith("comment")){
+                return eles[i].split("=")[1];
+            }
+        }
+        return "";
     }
     private static String getTableName(String firstLine){
         String tableName = firstLine.substring(firstLine.indexOf("`")+1,firstLine.lastIndexOf("`"));
