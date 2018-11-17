@@ -3,6 +3,8 @@ package #basePackage#.dao.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import  #basePackage#.model.#className#;
+import  #basePackage#.vo.#className#Vo;
 
 @Repository
 public class #className#DaoImpl implements #className#Dao{
