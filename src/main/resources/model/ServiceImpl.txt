@@ -43,7 +43,7 @@ public class #className#ServiceImpl implements #className#Service{
     }
 
     public #className#Vo getActivityConfigByIdForPage(Long id){
-        #className#Vo result = activityConfigDao.get#className#ById(id);;
+        #className#Vo result = #alias#Dao.get#className#ById(id);;
         setPageInfo(result);
         return result;
     }
