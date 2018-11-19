@@ -17,58 +17,77 @@ import java.io.File;
 @Component
 public class SqlGenerator extends AbstractCodeGenerator {
     private static final String CONFIG_FILE = "sqlModel";
-    public String replaceModelCode(Table table,String model){
+
+    public String replaceModelCode(Table table, String model) {
         String selectSql = createSelectSql(table);
         String insertSql = createInsertSql(table);
         String updateSql = createUpdateSql(table);
-        model = model.replace("#selectSQL#",selectSql);
-        model = model.replace("#selectSQL#",selectSql);
-        model = model.replace("#insertSQL#",insertSql);
-        return model.replace("#updateSQL#",updateSql);
+        model = model.replace("#selectSQL#", selectSql);
+        model = model.replace("#selectSQL#", selectSql);
+        model = model.replace("#insertSQL#", insertSql);
+        return model.replace("#updateSQL#", updateSql);
     }
-    public String createSelectSql(Table table){
+
+    public String createSelectSql(Table table) {
         StringBuilder sql = new StringBuilder("SELECT" + System.lineSeparator());
-        for(Column col : table.getColumnList()){
-            sql.append("            t."+col.getColName() + " AS " + col.getCamelColName() + ","+System.lineSeparator());
+        for (Column col : table.getColumnList()) {
+            sql.append("            t." + col.getColName() + " AS " + col.getCamelColName() + "," + System.lineSeparator());
         }
-        sql = removeLastChar(sql,",");
-        sql.append( System.lineSeparator());
-        sql.append("        FROM " + table.getTableName()+ " t" + System.lineSeparator());
+        sql = removeLastChar(sql, ",");
+        sql.append(System.lineSeparator());
+        sql.append("        FROM " + table.getTableName() + " t" + System.lineSeparator());
         return sql.toString();
     }
-    public String createInsertSql(Table table){
-        StringBuilder sql = new StringBuilder("INSERT INTO " +  table.getTableName() +"("+System.lineSeparator());
-        for(Column col : table.getColumnList()){
-            sql.append("            "+col.getColName()+ ","+System.lineSeparator());
+
+    public String createInsertSql(Table table) {
+        StringBuilder sql = new StringBuilder("INSERT INTO " + table.getTableName() + "(" + System.lineSeparator());
+        for (Column col : table.getColumnList()) {
+            sql.append("            " + col.getColName() + "," + System.lineSeparator());
         }
-        sql = removeLastChar(sql,",");
-        sql.append(")"+System.lineSeparator());
-        sql.append("        VALUES("+System.lineSeparator());
-        for(Column col : table.getColumnList()){
-            sql.append("            #{"+col.getCamelColName()+ "},"+System.lineSeparator());
+        sql = removeLastChar(sql, ",");
+        sql.append(")" + System.lineSeparator());
+        sql.append("        VALUES(" + System.lineSeparator());
+        for (Column col : table.getColumnList()) {
+            sql.append("            #{" + col.getCamelColName() + "," + getJdbcType(col.getColDBType()) + "}," + System.lineSeparator());
         }
-        sql = removeLastChar(sql,",");
+        sql = removeLastChar(sql, ",");
         sql.append(")");
         return sql.toString();
     }
-    public String createUpdateSql(Table table){
-        StringBuilder sql = new StringBuilder("UPDATE " +  table.getTableName() + " SET"+System.lineSeparator());
-        for(Column col : table.getColumnList()){
-            sql.append("            "+col.getColName()+ "=#{"+col.getCamelColName()+"},"+System.lineSeparator());
+
+    public String getJdbcType(String dbType) {
+        if (dbType.toLowerCase().contains("tinyint") || dbType.toLowerCase().contains("smallint")
+                || dbType.toLowerCase().contains("int") || dbType.toLowerCase().contains("bigint")) {
+            return "jdbcType=NUMERIC";
+        } else if (dbType.toLowerCase().contains("decimal")) {
+            return "jdbcType=NUMERIC";
+        } else if (dbType.toLowerCase().contains("varchar")) {
+            return "jdbcType=VARCHAR";
+        }else if(dbType.toLowerCase().contains("datetime") || dbType.toLowerCase().contains("date")){
+            return "jdbcType=DATE";
         }
-        sql = removeLastChar(sql,",");
+        return "jdbcType=VARCHAR";
+    }
+
+    public String createUpdateSql(Table table) {
+        StringBuilder sql = new StringBuilder("UPDATE " + table.getTableName() + " SET" + System.lineSeparator());
+        for (Column col : table.getColumnList()) {
+            sql.append("            " + col.getColName() + "=#{" + col.getCamelColName() + "," + getJdbcType(col.getColDBType()) + "}," + System.lineSeparator());
+        }
+        sql = removeLastChar(sql, ",");
         sql.append(System.lineSeparator());
         sql.append("        WHERE id=#{id}");
         return sql.toString();
     }
 
-    public StringBuilder removeLastChar(StringBuilder str,String code){
-        return new StringBuilder(str.substring(0,str.lastIndexOf(code)));
+    public StringBuilder removeLastChar(StringBuilder str, String code) {
+        return new StringBuilder(str.substring(0, str.lastIndexOf(code)));
     }
 
-    public String getFileName(Table table){
-        return "sql"+ File.separator+NameUtils.underline2Camel(table.getTableName().replace(PropertyUtils.getConfig("config").getProperty("tablePre"),""))+"_sql.xml";
+    public String getFileName(Table table) {
+        return "sql" + File.separator + NameUtils.underline2Camel(table.getTableName().replace(PropertyUtils.getConfig("config").getProperty("tablePre"), "")) + "_sql.xml";
     }
+
     @Override
     protected String getConfFile() {
         return CONFIG_FILE;

@@ -3,25 +3,25 @@
 <sqlMap namespace="#basePackage#.#className#Dao">
     <sql id="queryCondition">
     </sql>
-    <select id="get#className#ListForPage" parameterClass="com.sankuai.wpt.couponcenter.bean.#className#Vo" resultClass="#className#Vo">
+    <select id="get#className#ListForPage" parameterClass="#basePackage#.vo.#className#Vo" resultClass="#className#Vo">
         #selectSQL#
         WHERE 1=1
         <include refid="queryCondition"/>
         limit #{startNum},#{pageCount}
     </select>
-    <select id="get#className#ListCount" parameterClass="#className#Vo" resultClass="java.lang.Integer">
+    <select id="get#className#ListCount" parameterClass="#basePackage#.vo.#className#Vo" resultClass="java.lang.Integer">
          select count(1)
             WHERE 1=1
          <include refid="queryCondition"/>
     </select>
-    <select id="get#className#ById" parameterClass="Long" resultClass="#className#Vo">
+    <select id="get#className#ById" parameterClass="Long" resultClass="#basePackage#.vo.#className#Vo">
         #selectSQL#
         WHERE id=#id#
     </select>
-    <insert id="insert#className#" parameterClass="#className#Vo">
+    <insert id="insert#className#" parameterClass="#basePackage#.vo.#className#Vo">
         #insertSQL#
     </insert>
-    <update id="update#className#" parameterClass="#className#Vo">
+    <update id="update#className#" parameterClass="#basePackage#.vo.#className#Vo">
         #updateSQL#
     </update>
 </sqlMap>
