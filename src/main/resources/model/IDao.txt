@@ -6,11 +6,11 @@ import  #basePackage#.vo.#className#Vo;
 
 
 public interface #className#Dao{
-    List<#className#> get#className#ListForPage(#className#Vo #alias#);
+    List<#className#Vo> get#className#ListForPage(#className#Vo #alias#);
 
     Integer get#className#ListCount(#className#Vo #alias#);
 
-    #className# get#className#ById(Long id);
+    #className#Vo get#className#ById(Long id);
 
     void insert#className#(#className#Vo #alias#);
 

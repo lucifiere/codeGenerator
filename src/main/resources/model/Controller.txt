@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import #basePackage#.model.#className#;
+import #basePackage#.vo.#className#Vo;
 import #basePackage#.service.#className#Service;
 
 
@@ -40,13 +42,13 @@ public class #className#Controller{
         ModelAndView mv = new ModelAndView(LIST_PAGE);
         int startNum = (#alias#Vo.getPageNum() == 0 ? 0 : (#alias#Vo.getPageNum() - 1)) * #alias#Vo.getPageSize();
         #alias#Vo.setStartNum(startNum);
-        Collection<#className#Vo> items = #alias#Service.get#className#ListForPage(#alias#Vo);
+        List<#className#Vo> items = #alias#Service.get#className#ListForPage(#alias#Vo);
         int count = #alias#Service.get#className#ListCount(#alias#Vo);
         mv.addObject("items", items);
         mv.addObject("totalCount", count);
-        mv.addObject("pageCount",count/#alias#Vo.getPageSize()+1;);
+        mv.addObject("pageCount",count/#alias#Vo.getPageSize()+1);
         mv.addObject("#alias#Vo", #alias#Vo);
-        this.setEnumInfo(mv, true);
+        this.setEnumInfo(mv);
         return mv;
      }
      private void setEnumInfo(ModelAndView mv){
@@ -56,17 +58,17 @@ public class #className#Controller{
      @RequestMapping("toEdit")
      public ModelAndView toEdit(Long id) {
         ModelAndView mv = new ModelAndView(EDIT_PAGE);
-        mv.addObject("#alias#Vo", get#className#ForPage(id));
-        setEnumInfo(mv, false);
+        mv.addObject("#alias#Vo", getActivityConfigByIdForPage(id));
+        setEnumInfo(mv);
         mv.addObject("optType","edit");
         return mv;
      }
      
      @RequestMapping("toAdd")
-     public ModelAndView toAdd() {
+     public ModelAndView toAdd(#className#Vo #alias#Vo) {
         ModelAndView mv = new ModelAndView(EDIT_PAGE);
         mv.addObject("#alias#Vo", #alias#Vo);
-        setEnumInfo(mv, false);
+        setEnumInfo(mv);
         mv.addObject("optType","add");
         return mv;
      }
@@ -74,13 +76,14 @@ public class #className#Controller{
      @RequestMapping("toBrowser")
      public ModelAndView toBrowser(long id) {
         ModelAndView mv = new ModelAndView(EDIT_PAGE);
-        mv.addObject("#alias#Vo", #alias#Vo);
-        setEnumInfo(mv, false);
+        mv.addObject("#alias#Vo", get#className#ByIdForPage(id));
+        setEnumInfo(mv);
         mv.addObject("optType","browser");
         return mv;
      }
+
      private #className#Vo get#className#ByIdForPage(Long id){
-        return #alias#Service.get#className#ById(id);
+        return #alias#Service.getActivityConfigByIdForPage(id);
      }
 
 }

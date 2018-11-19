@@ -14,9 +14,11 @@ public interface #className#Service{
 
     #className#Vo get#className#ById(Long id);
 
-    void insert#className#(#className#Vo #alias#,User user);
+    void insert#className#(#className#Vo #alias#);
 
-    void update#className#(#className#Vo #alias#,User user);
+    void update#className#(#className#Vo #alias#);
+
+    #className#Vo getActivityConfigByIdForPage(Long id);
 }
 
 
